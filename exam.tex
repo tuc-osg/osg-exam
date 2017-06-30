@@ -1,0 +1,50 @@
+\documentclass[addpoints,answers]{exam}				% Für Lösungen "answers" als Option hinzufügen
+\input{student.tex}
+\input{setup.tex}
+
+% Fuer Klausuren in zwei Sprachen
+\newcommand{\de}[1]{\textcolor{blue}{\footnotesize #1}}
+\newcommand{\dep}[1]{\newline\de{#1}}
+
+\input{exam_meta.tex}
+
+\begin{document}
+
+\input{titlepage.tex}
+
+Willkommen bei der Prüfung für den Kurs {\textbf \coursename}.
+
+\subsection*{Regeln}
+
+\begin{itemize}
+\item Sie haben zur Beantwortung aller Fragen 90 Minuten Zeit.
+\item Durch Beginn der schriftlichen Bearbeitung bestätigen Sie, dass Sie gesundheitlich zu einer Prüfung in der Lage sind.
+\item Bitte schreiben Sie deutlich. Wir können nur lesbare Antworten bewerten.
+\item Als Hilfsmittel sind Schreibwerkzeuge und ein nicht-programmierbarer Taschenrechner gestattet.
+\item Elektronische Geräte mit nichtflüchtigem Speicher oder Kommunikationsfähigkeiten - egal ob aktiviert oder nicht - sind untersagt. Das Vorhandensein solcher Geräte in Ihrer Reichweite kann als Betrugsversuch gewertet werden.
+\item Gespräche mit anderen Studenten und der Austausch von schriftlichen Notizen sind während der Bearbeitungszeit untersagt und können als Betrugsversuch gewertet werden.
+\item Wenn Sie eine Frage haben oder die Toilette besuchen müssen, melden Sie sich bitte und warten auf eine Aufsichtsperson.
+\item Sie können zur Beantwortung auch einen Bleistift benutzen.
+\end{itemize}
+
+Frage 4 ist eine Bonusaufgabe und daher zum Erreichen der vollen Punktzahl nicht nötig.
+
+Zum Bestehen der Prüfung müssen sie mindestens 0 Punkte erreichen. Viel Erfolg!
+\\\\
+\begin{center}
+\combinedgradetable[h]
+\end{center}
+\pagebreak
+
+\begin{questions}
+\input{tasks/multiplechoice.tex}
+%\pagebreak
+\input{tasks/task1.tex}
+%\pagebreak
+\input{tasks/bonus.tex}
+
+\end{questions}
+
+%\clearpage
+%\section*{Zusätzliche Notizen}
+\end{document}

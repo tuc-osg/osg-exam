@@ -1,0 +1,58 @@
+\usepackage{fontspec}
+
+\usepackage{polyglossia}
+\setdefaultlanguage{german}
+
+\usepackage[a4paper,vmargin={25mm,20mm},hmargin={20mm,25mm}]{geometry}
+\usepackage{todonotes}			% definiert "\todo"
+\usepackage{parskip}   			% keine Absatzeinrückung
+\usepackage{tikz}	   			% Graphen malen
+\usetikzlibrary{automata}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily,breaklines=true}
+\usepackage{setspace}
+\usepackage{xspace}
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{multicol}
+\usepackage{units}
+\usepackage{paralist}
+\usepackage{csquotes}
+\usepackage{tabto}
+
+% dicke Linien in Tabellen mit dem neuen \hlinewd Kommando
+\usepackage{slashbox}
+\makeatletter
+\def\hlinewd#1{%
+  \noalign{\ifnum0=`}\fi\hrule \@height #1 %
+  \futurelet\reserved@a\@xhline}
+\makeatother
+
+% Frage und mögliche Antworten niemals über mehrere Seiten verteilen
+\usepackage{etoolbox}
+\AtBeginEnvironment{checkboxes}{\par\medskip\begin{minipage}{\linewidth}}\makeatletter
+\AtEndEnvironment{checkboxes}{\if@correctchoice \endgroup \fi\end{minipage}}\makeatother
+
+% Texte aus der Vorlage eindeutschen
+\renewcommand{\solutiontitle}{}
+\qformat{Aufgabe \thequestion \dotfill (\totalpoints\xspace Punkte)}
+\bonusqformat{Aufgabe \thequestion \xspace(Bonus) \dotfill (\totalbonuspoints\xspace Punkte)}
+\chqword{Aufgabe}
+\chpword{Punkte}
+\chtword{Gesamt}
+\chsword{Erreicht}
+\chbpword{Bonus}
+\hqword{Aufgabe}
+\hpword{Punkte}
+\htword{Gesamt}
+\hsword{Erreicht}
+\marginbonuspointname{}
+
+\header{\oddeven{Matrikelnr.: \studentid}{\thepage}}{}{\oddeven{\thepage}{\courseacronym \xspace \coursesemester}}      			  % Kopfzeile auf jeder Seite
+\headrule									% Linie unter der Kopfzeile
+\footer{}{}
+\pointsinrightmargin   						% Der Name sagt alles
+\shadedsolutions   							% der auch

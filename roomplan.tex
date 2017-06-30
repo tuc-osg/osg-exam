@@ -1,0 +1,35 @@
+%!TeX spellcheck = en_EN
+
+\documentclass[12pt]{article}
+
+\input{exam_meta.tex}
+
+\usepackage[a4paper,vmargin={25mm,20mm},hmargin={20mm,25mm}]{geometry}
+\usepackage[utf8]{inputenc} 	% Umlaute im Text
+\usepackage{xspace}
+\usepackage{tabularx}
+%\usepackage{ltablex}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{graphicx}
+
+\newcommand{\titleblock}{
+  \begin{minipage}[c]{4cm}
+  \includegraphics[height=2.5cm,width=\textwidth,keepaspectratio]{TUC}
+  \end{minipage}%
+  \hfill%
+  \begin{minipage}[c]{4cm}
+  \includegraphics[height=2cm,width=\textwidth,keepaspectratio]{logo-sw} \\
+  {\scriptsize{Professur\\[-2.5mm] Betriebssysteme}\vspace{1mm}}
+  \end{minipage}
+\section*{\coursename \xspace \coursesemester \\ Klausur - Sitzplan}
+
+Die Liste ist nach Matrikelnummern sortiert.
+}
+
+\begin{document}
+\begin{centering}
+\input{roomplantable.tex}
+\end{centering}
+
+\end{document}
