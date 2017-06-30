@@ -3,7 +3,7 @@
 
 	Assumptions:
 	- The script can re-generate student.tex and compile exam.tex to get a PDF.
-	- The file teilnehmer.xlsx exists and has the following format:
+	- The file zulassingsliste.xlsx exists and has the following format:
 			unchanged(default) worksheet name: Table 1
 			Columns with "Matrikelnummer", "Vorname" and "Name"
 			...
@@ -48,8 +48,6 @@ except:
 # 	for row in reader:
 # 		genexam(*row)
 #
-# # Also generate a blank one. LaTex needs some content, so we use gibberish white space.
-# genexam('~','~','~')
 
 wb = load_workbook(filename='zulassungsliste.xlsx', read_only=True)
 sheets = wb.get_sheet_names()
@@ -68,10 +66,8 @@ for i in range(1,ws.max_row+1):
 			startRow = i
 			matrikelCol = j
 		elif 'name' == str(ws.cell(row=i, column=j).value).lower():
-			# nameRow = i
 			nameCol = j
 		elif 'vorname' == str(ws.cell(row=i, column=j).value).lower():
-			# vornameRow = i
 			vornameCol = j
 		# print(ws.cell(row=i,column=j).value)
 
@@ -80,3 +76,6 @@ for i in range(startRow,ws.max_row+1):
 	# student = (ws.cell(row=i,column=matrikelCol).value, ws.cell(row=i,column=vornameCol).value, ws.cell(row=i,column=nameCol).value)
 	# print(student)
 	genexam(ws.cell(row=i, column=matrikelCol).value, ws.cell(row=i, column=vornameCol).value, ws.cell(row=i, column=nameCol).value)
+
+# Also generate a blank one. LaTex needs some content, so we use gibberish white space.
+genexam('~','~','~')
