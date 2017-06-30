@@ -49,17 +49,17 @@ except:
 # 		genexam(*row)
 #
 
+# load the xlsx file for reading only and extract data from the first sheet
 wb = load_workbook(filename='zulassungsliste.xlsx', read_only=True)
 sheets = wb.get_sheet_names()
 ws = wb[sheets[0]]
 
 startRow = 1
 matrikelCol = 1
-# nameRow = 1
 nameCol = 1
-# vornameRow = 1
 vornameCol = 1
 
+# find the starting row for the data and the columns for id, name and first name
 for i in range(1,ws.max_row+1):
 	for j in range(1, ws.max_column+1):
 		if 'matrikelnummer' == str(ws.cell(row=i,column=j).value).lower():
@@ -71,7 +71,7 @@ for i in range(1,ws.max_row+1):
 			vornameCol = j
 		# print(ws.cell(row=i,column=j).value)
 
-
+# generate students as a list of tuples and generate corresponding exam sheets
 for i in range(startRow,ws.max_row+1):
 	# student = (ws.cell(row=i,column=matrikelCol).value, ws.cell(row=i,column=vornameCol).value, ws.cell(row=i,column=nameCol).value)
 	# print(student)
