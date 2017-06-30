@@ -3,9 +3,9 @@
 
 	Assumptions:
 	- The script can re-generate student.tex and compile exam.tex to get a PDF.
-	- The file teilnehmer.csv exists and has the following format:
-			lastname1;firstname1;studentid1
-			lastname2;firstname2;studentid2
+	- The file teilnehmer.xlsx exists and has the following format:
+			unchanged(default) worksheet name: Table 1
+			Columns with "Matrikelnummer", "Vorname" and "Nachname"
 			...
 '''
 import os, csv, shutil, os.path
