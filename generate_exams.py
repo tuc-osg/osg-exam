@@ -4,8 +4,8 @@
 	Assumptions:
 	- The script can re-generate student.tex and compile exam.tex to get a PDF.
 	- The file zulassingsliste.xlsx exists and has the following format:
-			unchanged(default) worksheet name: Table 1
-			Columns with "Matrikelnummer", "Vorname" and "Name"
+			All data on sheet 1
+			Columns with "Matrikelnummer", "Vorname" and "Name" exist (not case sensitive)
 			...
 '''
 import os, shutil, os.path
