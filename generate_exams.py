@@ -6,6 +6,7 @@
 	- The file zulassingsliste.xlsx exists and has the following format:
 			All data on sheet 1
 			Columns with "Matrikelnummer", "Vorname" and "Name" exist (not case sensitive)
+			No empty rows (or pdf-s with None will be generated)
 			...
 '''
 import os, shutil, os.path
@@ -42,7 +43,7 @@ try:
 except:
 	pass
 
-
+# older code for CSV file format
 # with open('teilnehmer.csv', 'rb') as csvfile:
 # 	reader = csv.reader(csvfile, delimiter=';')
 # 	for row in reader:
@@ -59,23 +60,37 @@ matrikelCol = 1
 nameCol = 1
 vornameCol = 1
 
+matrikelFound = False
+nameFound = False
+vornameFound = False
+
 # find the starting row for the data and the columns for id, name and first name
 for i in range(1,ws.max_row+1):
 	for j in range(1, ws.max_column+1):
 		if 'matrikelnummer' == str(ws.cell(row=i,column=j).value).lower():
-			startRow = i
+			startRow = i+1
 			matrikelCol = j
+			matrikelFound = True
 		elif 'name' == str(ws.cell(row=i, column=j).value).lower():
 			nameCol = j
+			nameFound = True
 		elif 'vorname' == str(ws.cell(row=i, column=j).value).lower():
 			vornameCol = j
+			vornameFound = True
 		# print(ws.cell(row=i,column=j).value)
 
-# generate students as a list of tuples and generate corresponding exam sheets
-for i in range(startRow,ws.max_row+1):
-	# student = (ws.cell(row=i,column=matrikelCol).value, ws.cell(row=i,column=vornameCol).value, ws.cell(row=i,column=nameCol).value)
-	# print(student)
-	genexam(ws.cell(row=i, column=matrikelCol).value, ws.cell(row=i, column=vornameCol).value, ws.cell(row=i, column=nameCol).value)
 
-# Also generate a blank one. LaTex needs some content, so we use gibberish white space.
-genexam('~','~','~')
+if matrikelFound and nameFound and vornameFound:
+	# generate students as a list of tuples and generate corresponding exam sheets
+	# studentsList = []
+
+	for i in range(startRow,ws.max_row+1):
+		student = (str(ws.cell(row=i,column=matrikelCol).value), ws.cell(row=i,column=vornameCol).value, ws.cell(row=i,column=nameCol).value)
+		print(student)
+		# studentsList.append(student)
+		genexam(studentid=str(ws.cell(row=i, column=matrikelCol).value), firstname=ws.cell(row=i, column=vornameCol).value, lastname=ws.cell(row=i, column=nameCol).value)
+
+	# Also generate a blank one. LaTex needs some content, so we use gibberish white space.
+	genexam('~','~','~')
+else:
+	print('At least one of the needed columns has not been found! Check your .xlsx input file format!')
