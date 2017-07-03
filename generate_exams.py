@@ -1,6 +1,10 @@
 '''
 	Script to generate personalized student exams, and a blank one.
 
+	Execution Requirements:
+	- Python 3.5+
+	- openpyxl (et-xmlfile, jdcal): all three are installed with 'sudo pip install openpyxl'
+
 	Assumptions:
 	- The script can re-generate student.tex and compile exam.tex to get a PDF.
 	- The file zulassingsliste.xlsx exists and has the following format:
@@ -79,7 +83,7 @@ for i in range(1,ws.max_row+1):
 			vornameFound = True
 		# print(ws.cell(row=i,column=j).value)
 
-
+# if all necessary columns found, generate exams for every student
 if matrikelFound and nameFound and vornameFound:
 	# generate students as a list of tuples and generate corresponding exam sheets
 	# studentsList = []
