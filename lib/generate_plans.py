@@ -1,7 +1,6 @@
 import os
 import sys
 import shutil
-from itertools import chain
 from subprocess import call
 
 from xlsxparser import students
@@ -11,19 +10,27 @@ BASE_PATH = "../tasks/"
 PDF_PATH = BASE_PATH + "pdf/"
 
 # The available seat numbers per room
-n012 = sorted(chain(range(18, 1, -2), range(58, 39, -2), range(98, 79, -2), range(138, 119, -2),
-              range(178, 159, -2), range(218, 199, -2), range(258, 239, -2)))
+r201 = ( '1-a',  '1-b',  '1-c',  '1-d',  '1-e',  '1-f',
+         '4-a',  '4-b',  '4-c',  '4-d',  '4-e',  '4-f',
+         '7-a',  '7-b',  '7-c',  '7-d',  '7-e',  '7-f',
+        '10-a', '10-b', '10-c', '10-d', '10-e', '10-f',
+        '13-a', '13-b', '13-c', '13-d', '13-e', '13-f',
+        '16-a', '16-b', '16-c', '16-d', '16-e', '16-f')
 
-n111 = sorted(chain(range(16, 1, -2), range(48, 33, -2), range(80, 65, -2), range(112, 97, -2)))
+r316 = (  '1-a',  '1-b',  '1-c',  '1-d',  '1-e',  '1-f',  '1-g',  '1-h', 
+          '3-a',  '3-b',  '3-c',  '3-d',  '3-e',  '3-f',  '3-g',  '3-h',  '3-i',
+          '5-a',  '5-b',  '5-c',  '5-d',  '5-e',  '5-f',  '5-g',  '5-h',  '5-i',  '5-j',
+          '7-a',  '7-b',  '7-c',  '7-d',  '7-e',  '7-f',  '7-g',  '7-h',  '7-i',  '7-j', '7-k',
+          '9-a',  '9-b',  '9-c',  '9-d',  '9-e',  '9-f',  '9-g',  '9-h',  '9-i',  '9-j', '9-k',
+         '11-a', '11-b', '11-c', '11-d', '11-e', '11-f', '11-g', '11-h', '11-i', '11-j')
 
-n115 = sorted(chain(range(26, 1, -2), range(94, 61, -2), range(162, 129, -2), range(230, 197, -2),
-              range(298, 265, -2), range(366, 333, -2), range(434, 401, -2), range(502, 469, -2),
-              range(570, 537, -2), range(638, 605, -2), range(706, 673, -2)))
-
-r305 = sorted(chain(range(16, 1, -2), range(48, 33, -2), range(80, 65, -2), range(112, 97, -2)))
+r305 = (  '1-a',  '1-b',  '1-c',  '1-d',  '1-e',  '1-f', 
+          '3-a',  '3-b',  '3-c',  '3-d',  '3-e',  '3-f',
+          '5-a',  '5-b',  '5-c',  '5-d',  '5-e',  '5-f',
+                  '7-b',  '7-c',  '7-d',  '7-e')
 
 # The available rooms
-avail_rooms = {'N012': n012, 'N111': n111, 'N115': n115, '305': r305}
+avail_rooms = {'201': r201, '316': r316, '305': r305}
 
 ########################################################################################
 
@@ -42,16 +49,21 @@ xlsx_file = sys.argv[1]
 room_list = sys.argv[2].split(',')
 
 # Check room list
+capacity = 0
 for room in room_list:
     if room not in avail_rooms.keys():
         print("ERROR: Room %s is not supported, please adjust generate_plans.py accordingly." % room)
         exit(-1)
+    capacity += len(avail_rooms[room])
 
 # Fetch all students from XLSX, so that we can sort them
 all_students = []
 for first_name, last_name, student_id in students(xlsx_file):
     all_students.append({'student_id': student_id, 'first_name': first_name, 'last_name': last_name})
 all_students = sorted(all_students, key=lambda d: d['student_id'])
+if len(all_students) > capacity:
+    print("ERROR: The rooms only offer {0} seats, but we have {1} students.".format(capacity, len(all_students)))
+    exit(-1)
 
 withname = open(BASE_PATH + 'table_withname.tex', 'w')
 withoutname = open(BASE_PATH + 'table_withoutname.tex', 'w')
