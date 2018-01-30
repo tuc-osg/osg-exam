@@ -1,23 +1,16 @@
-\documentclass[addpoints,answers]{exam}				% Für Lösungen "answers" als Option hinzufügen
-\input{student.tex}
-\input{setup.tex}
-
-% Fuer Klausuren in zwei Sprachen
-\newcommand{\de}[1]{\textcolor{blue}{\footnotesize #1}}
-\newcommand{\dep}[1]{\newline\de{#1}}
-
+\input{../lib/setup.tex}
 \input{exam_meta.tex}
 
 \begin{document}
 
-\input{titlepage.tex}
+\input{../lib/titlepage.tex}
 
 Willkommen bei der Prüfung für den Kurs {\textbf \coursename}.
 
 \subsection*{Regeln}
 
 \begin{itemize}
-\item Sie haben zur Beantwortung aller Fragen 90 Minuten Zeit.
+\item Sie haben zur Beantwortung aller Fragen \examlength\xspace Minuten Zeit.
 \item Durch Beginn der schriftlichen Bearbeitung bestätigen Sie, dass Sie gesundheitlich zu einer Prüfung in der Lage sind.
 \item Bitte schreiben Sie deutlich. Wir können nur lesbare Antworten bewerten.
 \item Als Hilfsmittel sind Schreibwerkzeuge und ein nicht-programmierbarer Taschenrechner gestattet.
@@ -37,11 +30,11 @@ Zum Bestehen der Prüfung müssen sie mindestens 0 Punkte erreichen. Viel Erfolg
 \pagebreak
 
 \begin{questions}
-\input{tasks/multiplechoice.tex}
+\input{multiplechoice.tex}
 %\pagebreak
-\input{tasks/task1.tex}
+\input{task1.tex}
 %\pagebreak
-\input{tasks/bonus.tex}
+\input{bonus.tex}
 
 \end{questions}
 

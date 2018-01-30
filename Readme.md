@@ -9,19 +9,26 @@ This is the template for our exams, which relies on the [LaTex exam class](https
 
 This is still work in progress.
 
-## How to use
-- For an english exam comment out the translations in setup.tex. 
-- For bilingual exams you can use \dep{} to give german translations for the descriptions (see tasks directory for examples).
-- Add course name, abbreviation and term in exam_meta.tex
-- generate the CSV file for the student details (last name; first name; student number)
-- Change room in the Makefile (See generate_sheets.py for details about which rooms are currently supported)
-- Add Tasks for your exam
-- During design you can simply call lualatex to generate only example.pdf
-- If you are satisfied with your design, call make and be happy :)
+## Installation
 
-- After correction you can use ects.py to generate your grade list.
+- Make sure you have Python 3 installed.
+- Clone this repository from GitHub.
+- *pip3 install openpyxl*
+- Start to modify the content of the tasks/ folder.
+- Use the different *make* targets.
 
-## More details about the ingredients
-- The generate_exams.py script generates one exam for each registered student and a plain one. 
-- generate_sheets.py generates the room plans and registrations lists
-- ects.py can be used to make a grading for the exams
+## Rules
+
+- You only have to edit the content of the tasks/ folder.
+- The file tasks/exam_meta.tex is used by several templates, so please keep it separated.
+- In tasks/students.xlsx, the following format must be kept:
+  - All data is on the first sheet.
+  - There are columns with the name "Matrikelnummer", "Vorname" and "Name" (not case sensitive)
+  - There are no empty rows.
+
+## Hints
+
+- For easy editing, you can directly compile exam.tex while being in the tasks/ folder, instead of using the Makefile. 
+- For an english exam, comment out the translations in templates/translations.tex (TODO: Add switch instead) 
+- For bilingual exams, you can use \dep{} to give german translations for the descriptions (see tasks/ directory for examples).
+- After correction you can use bin/ects.py to generate your grade list.

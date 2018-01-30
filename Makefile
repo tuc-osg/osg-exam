@@ -1,30 +1,40 @@
-# Bedienungsanleitung:
-#
-# teilnehmer.csv sollte die Daten der Studenten enthalten
-# exam_meta.tex sollte den Titel der Pruefung enthalten
-# Der Raum sollte hier definiert werden
-# Anschließend können per 'make' die Klausuren und die Raumpläne
-# generiert werden
+STUDENTS = tasks/students.xlsx
+TASKS := $(wildcard tasks/*.tex) 
 
-ROOM=N012
-all: teilnehmer.csv exam
-	python generate_exams.py
-	python generate_sheets.py $(ROOM)
-	cp roomplan.pdf pdf/
-	cp roomentry.pdf pdf/
-	latexmk -C
-	latexmk -C
-	latexmk -C
 
-exam:
-	lualatex exam.tex
+# Generate single exam without solutions.
+exam: $(TASKS)
+	pushd tasks; \
+	lualatex exam.tex; \
+	lualatex exam.tex; \
+	popd 
+
+# Generate single exam with solutions.
+solution: $(TASKS)
+	pushd tasks; \
+	lualatex "\def\genanswers{}\input{exam.tex}"; \
+	lualatex "\def\genanswers{}\input{exam.tex}"; \
+	popd 
+
+# Generate all exams.
+exams: $(TASKS) $(STUDENTS)
+	pushd lib; \
+	python3 generate_exams.py ../$(STUDENTS); \
+	popd 
+
+# Generate room plans and entry check lists, needs ROOMS parameter
+# Example: make ROOMS=201,N111 plans
+plans: $(STUDENTS)
+	pushd lib; \
+	python3 generate_plans.py ../$(STUDENTS) $(ROOMS); \
+	popd
 
 clean:
-	rm -f exam.pdf
-	rm -f roomentry.pdf
-	rm -f roomplan.pdf
-	latexmk -C
-	latexmk -C
-	latexmk -C
-
-
+	pushd tasks; latexmk -C; popd
+	rm -f tasks/*.aux
+	rm -f tasks/*.log
+	rm -f tasks/table_withname.tex
+	rm -f tasks/table_withoutname.tex
+	rm -f tasks/exam.pdf
+	rm -f tasks/solution.pdf
+	rm -rf tasks/pdf

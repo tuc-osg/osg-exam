@@ -8,37 +8,37 @@
 \usepackage[utf8]{inputenc} 	% Umlaute im Text
 \usepackage{xspace}
 \usepackage{tabularx}
-\usepackage{ltablex}
+%\usepackage{ltablex}
 \usepackage{booktabs}
 \usepackage{multicol}
 \usepackage{graphicx}
-\usepackage[table]{xcolor}
 
-\begin{document}
-
+\newcommand{\titleblock}{
   \begin{minipage}[c]{4cm}
-  \includegraphics[height=2.5cm,width=\textwidth,keepaspectratio]{TUC}
+  \includegraphics[height=2.5cm,width=\textwidth,keepaspectratio]{../lib/TUC}
   \end{minipage}%
   \hfill%
   \begin{minipage}[c]{4cm}
-  \includegraphics[height=2cm,width=\textwidth,keepaspectratio]{logo-sw} \\
+  \includegraphics[height=2cm,width=\textwidth,keepaspectratio]{../lib/logo-sw} \\
   {\scriptsize{Professur\\[-2.5mm] Betriebssysteme}\vspace{1mm}}
   \end{minipage}
+\section*{\coursename \xspace \coursesemester \\ Klausur - Sitzplan}
 
+Die Liste ist nach Matrikelnummern sortiert.
+}
 
+\begin{document}
 \begin{centering}
-\section*{\coursename \xspace \coursesemester \\ Klausur -- Eingangskontrolle}
-\end{centering}
-
-\rowcolors{2}{gray!25}{white}
-
-\begin{tabularx}{\textwidth}{lllr}
+\titleblock\begin{multicols}{3}\vspace{1em}
+\begin{tabularx}{\textwidth}{rrr}
 \toprule
 %  \rowcolor{gray!50}
- Matrikelnummer & Name & & Raum (Platz)\\
+ Student & Raum & Platz \\
 \midrule
-\input{roomentrytable.tex}
+\input{table_withoutname.tex}
 \bottomrule
 \end{tabularx}
+\end{multicols}
+\end{centering}
 
 \end{document}

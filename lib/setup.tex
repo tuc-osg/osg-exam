@@ -1,3 +1,21 @@
+% Check for options set through the Makefile
+\ifdefined\genanswers
+	\documentclass[addpoints,answers]{exam}
+\else
+	\documentclass[addpoints]{exam}
+\fi
+
+\ifdefined\studentid
+\else
+    \def\studentid{123456}
+\fi
+
+\ifdefined\studentname
+\else
+    \def\studentname{Max Mustermann}
+\fi
+
+
 \usepackage{fontspec}
 
 \usepackage{polyglossia}
@@ -24,7 +42,7 @@
 \usepackage{tabto}
 
 % dicke Linien in Tabellen mit dem neuen \hlinewd Kommando
-\usepackage{slashbox}
+\usepackage{../lib/slashbox}
 \makeatletter
 \def\hlinewd#1{%
   \noalign{\ifnum0=`}\fi\hrule \@height #1 %
@@ -36,23 +54,13 @@
 \AtBeginEnvironment{checkboxes}{\par\medskip\begin{minipage}{\linewidth}}\makeatletter
 \AtEndEnvironment{checkboxes}{\if@correctchoice \endgroup \fi\end{minipage}}\makeatother
 
-% Texte aus der Vorlage eindeutschen
-\renewcommand{\solutiontitle}{}
-\qformat{Aufgabe \thequestion \dotfill (\totalpoints\xspace Punkte)}
-\bonusqformat{Aufgabe \thequestion \xspace(Bonus) \dotfill (\totalbonuspoints\xspace Punkte)}
-\chqword{Aufgabe}
-\chpword{Punkte}
-\chtword{Gesamt}
-\chsword{Erreicht}
-\chbpword{Bonus}
-\hqword{Aufgabe}
-\hpword{Punkte}
-\htword{Gesamt}
-\hsword{Erreicht}
-\marginbonuspointname{}
+\input{../lib/translations.tex}
 
-\header{\oddeven{Matrikelnr.: \studentid}{\thepage}}{}{\oddeven{\thepage}{\courseacronym \xspace \coursesemester}}      			  % Kopfzeile auf jeder Seite
 \headrule									% Linie unter der Kopfzeile
 \footer{}{}
 \pointsinrightmargin   						% Der Name sagt alles
 \shadedsolutions   							% der auch
+
+% Fuer Klausuren in zwei Sprachen
+\newcommand{\de}[1]{\textcolor{blue}{\footnotesize #1}}
+\newcommand{\dep}[1]{\newline\de{#1}}
