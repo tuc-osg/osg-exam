@@ -11,11 +11,14 @@ PDF_PATH = BASE_PATH + "pdf/"
 
 # The available seat numbers per room
 r201 = ( '1-a',  '1-b',  '1-c',  '1-d',  '1-e',  '1-f',
-         '4-a',  '4-b',  '4-c',  '4-d',  '4-e',  '4-f',
+         '3-a',  '3-b',  '3-c',  '3-d',  '3-e',  '3-f',
+         '5-a',  '5-b',  '5-c',  '5-d',  '5-e',  '5-f',
          '7-a',  '7-b',  '7-c',  '7-d',  '7-e',  '7-f',
-        '10-a', '10-b', '10-c', '10-d', '10-e', '10-f',
+         '9-a',  '9-b',  '9-c',  '9-d',  '9-e',  '9-f',
+        '11-a', '11-b', '11-c', '11-d', '11-e', '11-f',
         '13-a', '13-b', '13-c', '13-d', '13-e', '13-f',
-        '16-a', '16-b', '16-c', '16-d', '16-e', '16-f')
+        '16-a', '16-b', '16-c', '16-d', '16-e', '16-f',
+        '17-a', '17-b', '17-c', '17-d', '17-e', '17-f')
 
 r316 = (  '1-a',  '1-b',  '1-c',  '1-d',  '1-e',  '1-f',  '1-g',  '1-h', 
           '3-a',  '3-b',  '3-c',  '3-d',  '3-e',  '3-f',  '3-g',  '3-h',  '3-i',
@@ -45,6 +48,11 @@ def next_seat_gen(rooms):
 
 
 # Parse command-line arguments
+if len(sys.argv)<3:
+  print("ERROR: Not enough arguments.")
+  print("generate_plans.py <xlsx file> <room1,room2,...>")
+  print("Check also the Makefile.")
+  exit(-1)
 xlsx_file = sys.argv[1]
 room_list = sys.argv[2].split(',')
 
@@ -72,10 +80,11 @@ withname.write("% Generated, do not edit.\n\n")
 withoutname.write("% Generated, do not edit.\n\n")
 
 seats = next_seat_gen(room_list)
-for stud in all_students:
+for index, stud in enumerate(all_students):
+    stud['index'] = index+1
     stud['room'], stud['seat'] = next(seats)
     print(stud)
-    withname.write("{student_id} & {first_name} & {last_name} & {room} & {seat} \\\\\n".format(**stud))
+    withname.write("{index} & {student_id} & {first_name} & {last_name} & {room} & {seat} \\\\\n".format(**stud))
     withoutname.write("{student_id} & {room} & {seat} \\\\\n".format(**stud))
 
 withname.close()
