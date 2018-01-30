@@ -7,38 +7,24 @@
 \usepackage[a4paper,vmargin={25mm,20mm},hmargin={20mm,25mm}]{geometry}
 \usepackage[utf8]{inputenc} 	% Umlaute im Text
 \usepackage{xspace}
-\usepackage{tabularx}
+\usepackage{supertabular}
 %\usepackage{ltablex}
 \usepackage{booktabs}
 \usepackage{multicol}
 \usepackage{graphicx}
 
 \newcommand{\titleblock}{
-  \begin{minipage}[c]{4cm}
-  \includegraphics[height=2.5cm,width=\textwidth,keepaspectratio]{../lib/TUC}
-  \end{minipage}%
-  \hfill%
-  \begin{minipage}[c]{4cm}
-  \includegraphics[height=2cm,width=\textwidth,keepaspectratio]{../lib/logo-sw} \\
-  {\scriptsize{Professur\\[-2.5mm] Betriebssysteme}\vspace{1mm}}
-  \end{minipage}
-\section*{\coursename \xspace \coursesemester \\ Klausur - Sitzplan}
-
-Die Liste ist nach Matrikelnummern sortiert.
+  \includegraphics[height=2.5cm,width=\textwidth,keepaspectratio]{../lib/logo-sw}
+  \section*{\courseacronym \xspace \coursesemester \\ Prüfung}
 }
 
 \begin{document}
-\begin{centering}
-\titleblock\begin{multicols}{3}\vspace{1em}
-\begin{tabularx}{\textwidth}{rrr}
-\toprule
-%  \rowcolor{gray!50}
- Student & Raum & Platz \\
-\midrule
+\twocolumn
+\centering
+\titleblock
+\tablehead{\toprule Matrikel & Raum & Platz\\\midrule}
+\begin{supertabular}{rrr}
 \input{table_withoutname.tex}
-\bottomrule
-\end{tabularx}
-\end{multicols}
-\end{centering}
+\end{supertabular}
 
 \end{document}
