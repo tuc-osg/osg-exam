@@ -18,7 +18,7 @@ def students(xlsx_file):
     # find the starting row for the data and the columns for id, name and first name
     for i in range(1, ws.max_row + 1):
         for j in range(1, ws.max_column + 1):
-            if 'matrikelnummer' == str(ws.cell(row=i, column=j).value).lower():
+            if str(ws.cell(row=i, column=j).value).lower() in ['matrikelnummer', 'matr-nr.']:
                 startRow = i + 1
                 matrikelCol = j
                 matrikelFound = True
