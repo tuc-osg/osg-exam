@@ -33,6 +33,7 @@
 \lstset{basicstyle=\ttfamily,breaklines=true}
 \usepackage{setspace}
 \usepackage{xspace}
+
 \usepackage{wrapfig}
 \usepackage{amsmath}
 \usepackage{multicol}
@@ -40,6 +41,10 @@
 \usepackage{paralist}
 \usepackage{csquotes}
 \usepackage{tabto}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{array}
+\usepackage{tabu}
+\usepackage{enumitem}
 
 % dicke Linien in Tabellen mit dem neuen \hlinewd Kommando
 \usepackage{../lib/slashbox}
@@ -64,3 +69,11 @@
 % Fuer Klausuren in zwei Sprachen
 \newcommand{\de}[1]{\textcolor{blue}{\footnotesize #1}}
 \newcommand{\dep}[1]{\newline\de{#1}}
+
+% Wasserzeichen bei Musterloesung
+\ifprintanswers
+\usepackage{draftwatermark}
+\SetWatermarkText{Musterlösung}
+\SetWatermarkColor[gray]{0.9}
+\fi
+
