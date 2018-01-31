@@ -5,8 +5,7 @@ TASKS := $(wildcard tasks/*.tex)
 # Generate single exam without solutions.
 exam: $(TASKS)
 	pushd tasks; \
-	lualatex exam.tex; \
-	lualatex exam.tex; \
+	latexmk -lualatex exam.tex; \
 	popd 
 
 # Generate single exam with solutions.
@@ -31,9 +30,10 @@ plans: $(STUDENTS)
 
 clean:
 	pushd tasks; latexmk -C; popd
+	rm -rf lib/__pycache__
 	rm -f tasks/*.aux
 	rm -f tasks/*.log
-	rm -f tasks/table_withname.tex
+	rm -f tasks/table_withname*.tex
 	rm -f tasks/table_withoutname.tex
 	rm -f tasks/exam.pdf
 	rm -f tasks/solution.pdf
