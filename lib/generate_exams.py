@@ -27,9 +27,10 @@ def genexam(firstname, lastname, studentid):
         print("Generating " + targetfile)
 
     call('latexmk -C', shell=True, cwd=BASE_PATH)
-    # double run needed by exam class
+    # multiple runs needed by exam class
     cmdline = 'lualatex "\def\studentid{{{0}}}\def\studentname{{{1} {2}}}\input{{exam.tex}}"'.format(
         studentid, firstname, lastname)
+    call(cmdline, shell=True, cwd=BASE_PATH)
     call(cmdline, shell=True, cwd=BASE_PATH)
     call(cmdline, shell=True, cwd=BASE_PATH)
     shutil.move(BASE_PATH + 'exam.pdf', targetfile)
