@@ -14,6 +14,8 @@ solution: $(TASKS)
 	lualatex "\def\genanswers{}\input{exam.tex}"; \
 	lualatex "\def\genanswers{}\input{exam.tex}"; \
 	popd 
+	mkdir -p tasks/pdf
+	mv tasks/exam.pdf tasks/pdf/exam_solution.pdf
 
 # Generate all exams.
 exams: $(TASKS) $(STUDENTS)
