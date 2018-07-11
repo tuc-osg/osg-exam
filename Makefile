@@ -23,6 +23,11 @@ exams: $(TASKS) $(STUDENTS)
 	python3 generate_exams.py ../$(STUDENTS); \
 	popd 
 
+roomexams: $(TASKS) $(STUDENTS)
+	pushd lib; \
+	python3 generate_roomexams.py ../$(STUDENTS) $(ROOMS); \
+	popd 
+
 # Generate room plans and entry check lists, needs ROOMS parameter
 # Example: make ROOMS=201,N111 plans
 plans: $(STUDENTS)
