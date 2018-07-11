@@ -10,6 +10,16 @@
     \def\studentid{123456}
 \fi
 
+\ifdefined\proom
+\else
+    \def\proom{00}
+\fi
+
+\ifdefined\place
+\else
+    \def\place{42}
+\fi
+
 \ifdefined\studentname
 \else
     \def\studentname{Max Mustermann}
@@ -20,12 +30,13 @@
 
 \usepackage{polyglossia}
 \setdefaultlanguage{german}
+\setkeys{german}{babelshorthands}
 
 \usepackage[a4paper,vmargin={25mm,20mm},hmargin={20mm,25mm}]{geometry}
 \usepackage{todonotes}			% definiert "\todo"
 \usepackage{parskip}   			% keine Absatzeinrückung
 \usepackage{tikz}	   			% Graphen malen
-\usetikzlibrary{automata}
+\usetikzlibrary{automata, shapes, arrows}
 
 \usepackage{tabularx}
 \usepackage{booktabs}
@@ -45,6 +56,7 @@
 \usepackage{array}
 \usepackage{tabu}
 \usepackage{enumitem}
+\usepackage{amssymb}
 
 % dicke Linien in Tabellen mit dem neuen \hlinewd Kommando
 \usepackage{../lib/slashbox}
@@ -55,9 +67,11 @@
 \makeatother
 
 % Frage und mögliche Antworten niemals über mehrere Seiten verteilen
-\usepackage{etoolbox}
-\AtBeginEnvironment{checkboxes}{\par\medskip\begin{minipage}{\linewidth}}\makeatletter
-\AtEndEnvironment{checkboxes}{\if@correctchoice \endgroup \fi\end{minipage}}\makeatother
+ \usepackage{etoolbox}
+ % \AtBeginEnvironment{checkboxes}{\par\medskip\begin{minipage}{\linewidth}}\makeatletter
+ % \AtEndEnvironment{checkboxes}{\if@correctchoice \endgroup \fi\end{minipage}}\makeatother
+\BeforeBeginEnvironment{checkboxes}{\par\nopagebreak\minipage{\linewidth}}
+\AfterEndEnvironment{checkboxes}{\endminipage}
 
 \input{../lib/translations.tex}
 
