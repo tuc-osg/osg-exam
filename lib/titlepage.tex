@@ -6,10 +6,14 @@
 \\
 \studentname
 \\
-Raum: \proom
-\\
-Sitzplatz: \place
-\\
+\ifdefined\proom
+	Raum: \proom
+	\\
+	Sitzplatz: \place
+	\\
+\else
+\fi
+
 \courseacronym \xspace (\coursesemester)
 }
 \vspace{1em}
