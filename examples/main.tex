@@ -1,0 +1,62 @@
+\documentclass[
+  xlsfile=./Zulassung/students.xlsx,
+  prefix=pn,         % for "Programming and Nonsense"
+  % outpath=mypath,  % target directory for exams (default: "pdf")
+  % seat=true,       % seat information at exam sheet
+  %development,      % uncomment during (early phase of) development
+  %answers,          % generate standard solution in developer mode
+  lang={de,en},      % possible values: de,en,{de,en},{en.de} - first language determines main language
+  % solutiontime=45, % same as preamble command \solutionTime
+  % quotes=ascii,    % shorthands for quotes, possible values: babelshorthands => "`phrase to quote"'
+                     %                                         ascii => "phrase to quote"
+                     %                                         other => LaTeX standard behavior
+  % impolite=true,   % avoid few poite phrase to shorten title page
+   ]{osgexam}
+
+  \course[AuP]{\cdeen{Programmierung und Unsinn}{Programming and Nonsense}}
+  \term[WS18/19]{WS 2018/2019}
+  \solutionTime{120}
+  \addextrapoints[Extra]{3}
+
+\begin{document}
+ 
+\begin{questions}
+
+  \question[23] \deen{Was ist die Antwort auf die Frage nach dem Universum,
+    dem Leben und den ganzen Rest?}{What ist the answer to the question for
+    life, universe, and everything?}
+
+  \fillin[42]
+
+  \question
+  \deen{Alle Multiple-Choice-Fragen haben genau eine korrekte Antwort.
+    Wenn  Sie mehr als eine markieren, erhalten Sie keine Punkte. Bei Korrekturbedarf machen Sie alle Kästchen für die
+    jeweilige Frage ungültig und schreiben das Wort "`KORREKT"' neben die angedachte Antwort.}{All multiple choice
+    questions have exactly one correct answer.
+    If you mark more than one, you will get no points. If you need to correct
+    yourself, invalidate all choices of this particular question and write the word "`CORRECT"' beside your
+    intended choice.}
+  \begin{parts}
+    \part[1]
+    \deen{Sind Sie sicher?}{Are you sure?}
+    \begin{checkboxes}
+      \choice \sdeen{ja}{yes}
+      \correctchoice \sdeen{nein}{no}
+    \end{checkboxes}
+    \bonuspart[1]
+    \deen{Wirklich?}{Really?}
+    \begin{checkboxes}
+      \choice \sdeen{ja}{yes}
+      \correctchoice \sdeen{nein}{no}
+    \end{checkboxes}
+  \end{parts}
+
+  \bonusquestion[1]
+  \deen{Welche Aussage hören Prüfer am häufigsten in mündlichen Prüfungen?}{What phrase are the examiner hearing most
+    often in oral exams?}
+  \begin{solution}
+    \textenglish{"`I don't know."'}
+  \end{solution}
+\end{questions}
+
+\end{document}

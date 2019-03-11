@@ -1,0 +1,3 @@
+# encforce LuaLaTex and shell escape
+$pdf_mode=4;
+$lualatex = "lualatex %O -shell-escape %S";
