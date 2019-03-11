@@ -25,10 +25,10 @@ This is still work in progress.
 - Create a new latex document with the osgexam class and set the option "development"
 - Run *lualatex -shell-escape <source.tex>* 
    - Alternatively: copy *latexmkrc* into your directory and run *latexmkrc <source.tex>*  
-- For interactive mode / 
+- For interactive mode, comment out *development* option
 
 ## Rules
-- In tasks/students.xlsx, the following format must be kept:
+- In <exam>.xlsx, the following format must be kept:
   - All data is on the first sheet.
   - There are columns with the name "Matrikelnummer", "Vorname" and "Name" and possibly "Platz" (not case sensitive)
   - There are no empty rows.
