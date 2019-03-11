@@ -2,7 +2,12 @@
 
 This is the template for our exams, which relies on the [LaTex exam class](https://www.ctan.org/pkg/exam). It supports:
 
+  - Useful defaults for layout and titlepage
   - Automated generation of personalized exams from a list of students.
+  - Automated handling of multilangual exams
+  - Flexible directory layout for source and output documents
+  
+  In addition, there are Python scripts for:
   - Generation of a seating plan, based on predefined room capacities.
   - Generation of a checklist for students showing up.
   - Generation of grading proposals based on ECTS.
@@ -11,30 +16,19 @@ This is still work in progress.
 
 ## Installation
 
-- Make sure you have Python 3 installed.
-- Clone this repository from GitHub.
+- Make sure you have Python 3 and LuaLaTeX installed.
 - *pip3 install openpyxl*
+- Copy *osgexam.cls' somewhere in your tex-path (and run *sudo texhash*) or your local directory where you prepare the exam
 
 ## Usage
 
-- Start to modify the content of the tasks/ folder.
-- Use the different *make* targets:
-  - `make exam`: Build a single exam for an example student.
-  - `make exams`: Build exams for all students listed in tasks/students.xlsx.
-  - `make ROOMS=201,305,316 plans`: Build seating plans for rooms 201,305 and 316.
-  - `make solution`: Build a single exam with example solutions.
+- Create a new latex document with the osgexam class and set the option "development"
+- Run *lualatex -shell-escape <source.tex>* 
+   - Alternatively: copy *latexmkrc* into your directory and run *latexmkrc <source.tex>*  
+- For interactive mode / 
 
 ## Rules
-
-- The file tasks/exam_meta.tex is used by several templates, so please keep it separated.
 - In tasks/students.xlsx, the following format must be kept:
   - All data is on the first sheet.
-  - There are columns with the name "Matrikelnummer", "Vorname" and "Name" (not case sensitive)
+  - There are columns with the name "Matrikelnummer", "Vorname" and "Name" and possibly "Platz" (not case sensitive)
   - There are no empty rows.
-
-## Hints
-
-- For easy editing, you can directly compile exam.tex with LuaLatex / LatexMk while being in the tasks/ folder, instead of using the Makefile. 
-- For an english exam, comment out the translations in templates/translations.tex (TODO: Add switch instead) 
-- For bilingual exams, you can use \dep{} to give german translations for the descriptions (see tasks/ directory for examples).
-- After correction you can use bin/ects.py to generate your grade list. (TODO: Adopt for XLSX usage)
