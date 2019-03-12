@@ -759,3 +759,35 @@ if sys.argv[1] == 'serie':
   contents={\sffamily\textbf{\ldeen{Musterlösung}{Standard Solution}}}
   ]{background}
 \fi
+  
+%%%%%%%%%%%%%% Convenience %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\oex@xchecknextarg}{%
+  \@ifnextchar\bgroup{\osx@consumnextarg}{\oex@process@xdeen}
+}
+\newcommand{\osx@consumnextarg}[1]{%
+  \luadirect{
+    oex_deenargcnt=oex_deenargcnt+1
+    oex_deenargs[oex_deenargcnt]=\luastringN{#1}
+  }%
+  \@ifnextchar\bgroup{\osx@consumnextarg}{\oex@process@xdeen} 
+}
+\def\oex@process@xdeen{
+  \luadirect{
+    for i=1, oex_deenargcnt do
+      oex_deenpat='@'.. tostring(i)
+      oex_deende , _ = string.gsub(oex_deende, oex_deenpat, oex_deenargs[i])
+      oex_deenen , _ = string.gsub(oex_deenen, oex_deenpat, oex_deenargs[i])
+    end
+    tex.print('\string\\deen{'..oex_deende..'}{'..oex_deenen..'}')
+    %tex.print('\string\\emph{'..oex_deende..'}')
+  }
+}
+\newcommand{\xdeen}[2]{
+  \luadirect{
+    oex_deenargs={}
+    oex_deenargcnt=0
+    oex_deende=\luastringN{#1}
+    oex_deenen=\luastringN{#2}
+  }
+  \oex@xchecknextarg
+}
