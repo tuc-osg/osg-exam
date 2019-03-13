@@ -247,10 +247,10 @@ from subprocess import call
 from openpyxl import load_workbook
 
 def genexam(firstname, lastname, studentid, seat, mainfile, job, outpath, mode, force=False): 
-'''
-Generates an exam for the given student, if not existing.
-Target file is stored in "outpath", with the student ID as file name.
-'''
+    '''
+    Generates an exam for the given student, if not existing.
+    Target file is stored in "outpath", with the student ID as file name.
+    '''
     #print("firstname ="+firstname)
     #print("lastname ="+lastname)
     #print("studentid ="+studentid)
