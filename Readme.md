@@ -1,7 +1,5 @@
 # Exam class for the TUC Operating System Group
-
 This is the template for our exams, which relies on the [LaTex exam class](https://www.ctan.org/pkg/exam). It supports:
-
   - Useful defaults for layout and titlepage
   - Automated generation of personalized exams from a list of students.
   - Automated handling of multilangual exams
@@ -21,7 +19,7 @@ This is still work in progress.
 - LuaLaTeX >= 1.04
 
 ### Procedure
-- *pip3 install openpyxl*
+- `pip3 install openpyxl`
 - Copy `osgexam.cls` somewhere to your tex-path (and run `sudo
   texhash`) or to your local directory where you prepare the exam
 
@@ -32,7 +30,7 @@ This is still work in progress.
 - For interactive mode, comment out *development* option
 
 ## Rules
-- In <exam>.xlsx, the following format must be kept:
+- In `<exam>.xlsx`, the following format must be kept:
   - All data is on the first sheet.
   - There are columns with the name "Matrikelnummer", "Vorname" and "Name" and possibly "Platz" (not case sensitive)
   - There are no empty rows.
