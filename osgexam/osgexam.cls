@@ -215,10 +215,11 @@
     \ifundef{\seat}{
       \booltrue{oex@startover}
       \typein[\seat]{Seat}
-    }{}
+    }{
+    }
     \def\oex@seat{\seat}
   }{
-    \def\oex@seat{~}
+    \def\oex@seat{\osgexam@defaultseat} % dummy
   }
 }{}
 %%%%%%%%%%%%%% Mode: dummy  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
