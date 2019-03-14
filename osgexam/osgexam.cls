@@ -351,13 +351,13 @@ if sys.argv[1] == 'serie':
   }{}
   \IfFileExists{\xlsfile}{
     \typeout{***** Generate from "\xlsfile"}
-    \directlua{os.execute("python \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath'")}
+    \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath'")}
   }{
     % Kann Datei nicht finden => Fehler
     \ClassError{\ClassName}{Can't find file '\xlsfile'.}{Provide a existing Excel file.}
   }
 }{
-  \directlua{os.execute("python \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' True")}
+  \directlua{os.execute("python3 \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' True")}
 }
 % hinterher aufräumen
 \directlua{os.execute("rm \jobname.gen.py")}
