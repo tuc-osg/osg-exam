@@ -16,7 +16,12 @@ This is still work in progress.
 
 ## Installation
 
-- Make sure you have Python 3 and LuaLaTeX installed.
+### Prerequisites
+- Python >= 3.6
+- latexmk >= 4.61
+- LuaLaTeX >= 1.04
+
+### Procedure
 - *pip3 install openpyxl*
 - Copy *osgexam.cls' somewhere in your tex-path (and run *sudo texhash*) or your local directory where you prepare the exam
 
