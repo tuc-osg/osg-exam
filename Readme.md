@@ -15,7 +15,6 @@ This is the template for our exams, which relies on the [LaTex exam class](https
 This is still work in progress.
 
 ## Installation
-
 ### Prerequisites
 - Python >= 3.6
 - latexmk >= 4.61
@@ -23,13 +22,13 @@ This is still work in progress.
 
 ### Procedure
 - *pip3 install openpyxl*
-- Copy *osgexam.cls' somewhere in your tex-path (and run *sudo texhash*) or your local directory where you prepare the exam
+- Copy `osgexam.cls` somewhere to your tex-path (and run `sudo
+  texhash`) or to your local directory where you prepare the exam
 
 ## Usage
-
 - Create a new latex document with the osgexam class and set the option "development"
-- Run *lualatex -shell-escape <source.tex>* 
-   - Alternatively: copy *latexmkrc* into your directory and run *latexmkrc <source.tex>*  
+- Run `lualatex -shell-escape <source.tex>`
+   - Alternatively: copy `latexmkrc` to your directory and run `latexmkrc <source.tex>`
 - For interactive mode, comment out *development* option
 
 ## Rules
