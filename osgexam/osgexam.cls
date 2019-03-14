@@ -295,7 +295,7 @@ def students(xlsx_file):
             first_name = ws.cell(row=row_index+1, column=first_name_col+1).value
             last_name = ws.cell(row=row_index+1, column=last_name_col+1).value
             if seat_col:
-                seat = ws.cell(row=row_index+1, column=last_name_col+1).value
+                seat = ws.cell(row=row_index+1, column=seat_col+1).value
             else:
                 seat = '~'
             if student_id != 'None':  # Might be None in empty rows
