@@ -303,13 +303,13 @@ def students(xlsx_file):
                 yield first_name, last_name, student_id, seat
         else:
             for col_index, cell in enumerate(row):
-                if str(cell.value).lower() in ['matrikelnummer', 'matr-nr.']:
+                if str(cell.value).lower() in ['matrikelnummer','matr-nr.','id','student id']:
                     student_id_col = col_index
-                elif 'name' == str(cell.value).lower():
+                elif str(cell.value).lower() in ['name', 'surname','family name']:
                     last_name_col = col_index
-                elif 'vorname' == str(cell.value).lower():
+                elif str(cell.value).lower() in ['vorname','first name','forename','given name']:
                     first_name_col = col_index
-                elif str(cell.value).lower() in ['sitz', 'platz']:
+                elif str(cell.value).lower() in ['sitz', 'platz','seat','place']:
                      seat_col = col_index
     
 if sys.argv[1] == 'single':
@@ -413,7 +413,8 @@ if sys.argv[1] == 'serie':
 % Die Sprachoption ("lang=..") kann geschweifte Klammern enthalten. Sie wird als Liste behandelt und mit dem
 % Listenmechanismus von eToolBox zerlegt.
 % Die Reihenfolge ist wichtig: die zurerst gelistete Sprache ist die Erstsprache.
-% Texte in der Erstsprache erscheinen bei zweisprachigen Texten immer zuerst.
+% Texte in der Erstsprache erscheinen bei zweisprachigen Texten immer
+% zuerst, 
 
 \renewcommand*{\do}[1]{
   % Überprüfe, ob valides Sprachkürzel angegeben wurde

@@ -1,5 +1,5 @@
 # Exam class for the TUC Operating System Group
-This is the template for our exams, which relies on the [LaTex exam class](https://www.ctan.org/pkg/exam). It supports:
+This is the template for our exams, which relies on the [LaTeX exam class](https://www.ctan.org/pkg/exam). It supports:
   - Useful defaults for layout and titlepage
   - Automated generation of personalized exams from a list of students.
   - Automated handling of multilangual exams
@@ -32,5 +32,7 @@ This is still work in progress.
 ## Rules
 - In `<exam>.xlsx`, the following format must be kept:
   - All data is on the first sheet.
-  - There are columns with the name "Matrikelnummer", "Vorname" and "Name" and possibly "Platz" (not case sensitive)
+  - There are columns with the name {Matrikelnummer|Matr-Nr|ID|student
+    Id}, {Vorname|first name|surname|given name}, and
+    {Name|surname|family name}, and possibly {Platz|seat|place}, respectively (not case sensitive)
   - There are no empty rows.
