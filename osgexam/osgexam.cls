@@ -779,7 +779,6 @@ if sys.argv[1] == 'serie':
       oex_deenen , _ = string.gsub(oex_deenen, oex_deenpat, oex_deenargs[i])
     end
     tex.print('\string\\deen{'..oex_deende..'}{'..oex_deenen..'}')
-    %tex.print('\string\\emph{'..oex_deende..'}')
   }
 }
 \newcommand{\xdeen}[2]{
