@@ -18,7 +18,11 @@ This is still work in progress.
 
 - Make sure you have Python 3 and LuaLaTeX installed.
 - *pip3 install openpyxl*
-- Copy *osgexam.cls' somewhere in your tex-path (and run *sudo texhash*) or your local directory where you prepare the exam
+- Copy *osgexam.cls' somewhere in your tex-path (and run *sudo texhash*) or your local directory where you prepare the exam:
+  - clone this repo to a folder, e.g. `git clone git@github.com:tuc-osg/osg-exam.git ~/Documents`
+  - prepare a folder for the local tex tree: `mkdir -p $(kpsewhich -var-value=TEXMFHOME)/tex`
+  - link the class subfolder to that directory: `ln -s ~/Documents/osg-exam/osgexam $(kpsewhich -var-value=TEXMFHOME)/tex/osgexam`
+  - if necessary, you can get an update with `git pull` inside your local repository - thats all
 
 ## Usage
 
