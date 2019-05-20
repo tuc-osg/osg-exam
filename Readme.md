@@ -20,8 +20,11 @@ This is still work in progress.
 
 ### Procedure
 - `pip3 install openpyxl`
-- Copy `osgexam.cls` somewhere to your tex-path (and run `sudo
-  texhash`) or to your local directory where you prepare the exam
+- clone this repo to a folder, e.g. `git clone git@github.com:tuc-osg/osg-exam.git ~/Documents`
+- prepare a folder for the local tex tree: `mkdir -p $(kpsewhich -var-value=TEXMFHOME)/tex`
+- link the class subfolder to that directory: `ln -s ~/Documents/osg-exam/osgexam $(kpsewhich -var-value=TEXMFHOME)/tex/osgexam`
+- if necessary, run `sudo texhash` if the class isn't found.
+- You can get an update with `git pull` inside your local repository (`~/Documents/osg-exam`)
 
 ## Usage
 - Create a new latex document with the osgexam class and set the option "development"
