@@ -215,10 +215,11 @@
     \ifundef{\seat}{
       \booltrue{oex@startover}
       \typein[\seat]{Seat}
-    }{}
+    }{
+    }
     \def\oex@seat{\seat}
   }{
-    \def\oex@seat{~}
+    \def\oex@seat{\osgexam@defaultseat} % dummy
   }
 }{}
 %%%%%%%%%%%%%% Mode: dummy  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -247,10 +248,10 @@ from subprocess import call
 from openpyxl import load_workbook
 
 def genexam(firstname, lastname, studentid, seat, mainfile, job, outpath, mode, force=False): 
-'''
-Generates an exam for the given student, if not existing.
-Target file is stored in "outpath", with the student ID as file name.
-'''
+    '''
+    Generates an exam for the given student, if not existing.
+    Target file is stored in "outpath", with the student ID as file name.
+    '''
     #print("firstname ="+firstname)
     #print("lastname ="+lastname)
     #print("studentid ="+studentid)
@@ -295,20 +296,20 @@ def students(xlsx_file):
             first_name = ws.cell(row=row_index+1, column=first_name_col+1).value
             last_name = ws.cell(row=row_index+1, column=last_name_col+1).value
             if seat_col:
-                seat = ws.cell(row=row_index+1, column=last_name_col+1).value
+                seat = ws.cell(row=row_index+1, column=seat_col+1).value
             else:
                 seat = '~'
             if student_id != 'None':  # Might be None in empty rows
                 yield first_name, last_name, student_id, seat
         else:
             for col_index, cell in enumerate(row):
-                if str(cell.value).lower() in ['matrikelnummer', 'matr-nr.']:
+                if str(cell.value).lower() in ['matrikelnummer','matr-nr.','id','student id']:
                     student_id_col = col_index
-                elif 'name' == str(cell.value).lower():
+                elif str(cell.value).lower() in ['name', 'surname','family name']:
                     last_name_col = col_index
-                elif 'vorname' == str(cell.value).lower():
+                elif str(cell.value).lower() in ['vorname','first name','forename','given name']:
                     first_name_col = col_index
-                elif str(cell.value).lower() in ['sitz', 'platz']:
+                elif str(cell.value).lower() in ['sitz', 'platz','seat','place']:
                      seat_col = col_index
     
 if sys.argv[1] == 'single':
@@ -351,13 +352,13 @@ if sys.argv[1] == 'serie':
   }{}
   \IfFileExists{\xlsfile}{
     \typeout{***** Generate from "\xlsfile"}
-    \directlua{os.execute("python \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath'")}
+    \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath'")}
   }{
     % Kann Datei nicht finden => Fehler
     \ClassError{\ClassName}{Can't find file '\xlsfile'.}{Provide a existing Excel file.}
   }
 }{
-  \directlua{os.execute("python \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' True")}
+  \directlua{os.execute("python3 \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' True")}
 }
 % hinterher aufräumen
 \directlua{os.execute("rm \jobname.gen.py")}
@@ -412,7 +413,8 @@ if sys.argv[1] == 'serie':
 % Die Sprachoption ("lang=..") kann geschweifte Klammern enthalten. Sie wird als Liste behandelt und mit dem
 % Listenmechanismus von eToolBox zerlegt.
 % Die Reihenfolge ist wichtig: die zurerst gelistete Sprache ist die Erstsprache.
-% Texte in der Erstsprache erscheinen bei zweisprachigen Texten immer zuerst.
+% Texte in der Erstsprache erscheinen bei zweisprachigen Texten immer
+% zuerst, 
 
 \renewcommand*{\do}[1]{
   % Überprüfe, ob valides Sprachkürzel angegeben wurde
@@ -779,7 +781,6 @@ if sys.argv[1] == 'serie':
       oex_deenen , _ = string.gsub(oex_deenen, oex_deenpat, oex_deenargs[i])
     end
     tex.print('\string\\deen{'..oex_deende..'}{'..oex_deenen..'}')
-    %tex.print('\string\\emph{'..oex_deende..'}')
   }
 }
 \newcommand{\xdeen}[2]{
