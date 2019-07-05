@@ -19,7 +19,7 @@ This is still work in progress.
 - LuaLaTeX >= 1.04
 
 ### Procedure
-- `pip3 install openpyxl`
+- if necessary, install openpyxl: `pip3 install openpyxl`
 - clone this repo to a folder, e.g. `git clone git@github.com:tuc-osg/osg-exam.git ~/Documents`
 - prepare a folder for the local tex tree: `mkdir -p $(kpsewhich -var-value=TEXMFHOME)/tex`
 - link the class subfolder to that directory: `ln -s ~/Documents/osg-exam/osgexam $(kpsewhich -var-value=TEXMFHOME)/tex/osgexam`
@@ -29,7 +29,7 @@ This is still work in progress.
 ## Usage
 - Create a new latex document with the osgexam class and set the option "development"
 - Run `lualatex -shell-escape <source.tex>`
-   - Alternatively: copy `latexmkrc` to your directory and run `latexmkrc <source.tex>`
+   - Alternatively: copy `latexmkrc` to your directory and run `latexmk <source.tex>`
 - For interactive mode, comment out *development* option
 
 ## Rules
