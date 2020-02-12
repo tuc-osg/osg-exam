@@ -17,6 +17,7 @@
 %% - series:  generiert personalisierte Aufgabenblätter aus einer xlsx-Datei
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 % 2020-02-12: FIX: Anpassung an Update von openpyxl (get_sheet_names() ist deprecated)
+% 2020-02-12: FIX: Robust gegen Leerzeichen in Excel-Tabellenheadern
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
@@ -304,13 +305,13 @@ def students(xlsx_file):
                 yield first_name, last_name, student_id, seat
         else:
             for col_index, cell in enumerate(row):
-                if str(cell.value).lower() in ['matrikelnummer','matr-nr.','id','student id']:
+                if str(cell.value).strip().lower() in ['matrikelnummer','matr-nr.','id','student id']:
                     student_id_col = col_index
-                elif str(cell.value).lower() in ['name', 'surname','family name']:
+                elif str(cell.value).strip().lower() in ['name', 'surname','family name']:
                     last_name_col = col_index
-                elif str(cell.value).lower() in ['vorname','first name','forename','given name']:
+                elif str(cell.value).strip().lower() in ['vorname','first name','forename','given name']:
                     first_name_col = col_index
-                elif str(cell.value).lower() in ['sitz', 'platz','seat','place']:
+                elif str(cell.value).strip().lower() in ['sitz', 'platz','seat','place']:
                      seat_col = col_index
     
 if sys.argv[1] == 'single':
