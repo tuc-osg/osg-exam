@@ -554,7 +554,7 @@ if sys.argv[1] == 'serie':
   % Prüfungsregeln
   \begin{minipage}[t][\oex@rulespace][c]{1.01\textwidth}\vspace*{5cm}
     \ifbool{osgexam@impolite}{\textbf{\sdeen{Regeln}{Rules}:}}{\noindent\deen{Willkommen zur Klausur {\textbf \insertCourseName}! Beachten Sie bitte
-        die folgenden Regeln:}{Welcome to exam {\textbf \insertCourseName}! Please regard the following rules:}}
+        die folgenden Regeln:}{Welcome to the exam on {\textbf \insertCourseName}! Please regard the following rules:}}
     \oex@rules
     \noindent\textbf{\deen{Zum Bestehen der Prüfung müssen Sie mindestens
         \insertPointsToPass\ Punkte erreichen. \ifbool{osgexam@impolite}{}{Viel Erfolg!}}{For passing
@@ -623,17 +623,17 @@ if sys.argv[1] == 'serie':
 }
 \addFrontPageRule{
   \deen{Durch Annahme des Aufgabenblattes erklären Sie, dass Sie
-    gesundheitlich in der Lage sind, eine Prüfung abzulegen.}{By accepting
-    this task sheet you declare that you are in a proper health condition for
+    \textbf{gesundheitlich in der Lage} sind, eine Prüfung abzulegen.}{By accepting
+    this task sheet you declare that you are \textbf{in a proper health condition} for
     an exam.} 
 }
 \addFrontPageRule{
   \deen{Bitte stellen Sie Ihre Lösung lesbar und sauber dar. Schreiben Sie
     Ihre Lösungen auf dieses Aufgabenblatt! Außer für Multiple-Choice- und
-    Fill-In-Fragen muss stets erkennbar sein, wie Sie zum Ergebnis
-    gelangen!}{Please write clear and readable. Write the final results on
+    Fill-In-Fragen \textbf{muss stets erkennbar sein, wie Sie zum Ergebnis
+    gelangen!}}{Please write clear and readable. Write the final results on
     this exam sheet! Except for multiple choice questions and fill in
-    questions, you must provide the solution way!}
+    questions, \textbf{you must provide the solution way!}}
 }
 \addFrontPageRule{
   \deen{Erlaubte Hilfsmittel sind Schreibwerkzeuge, ein
@@ -663,9 +663,9 @@ if sys.argv[1] == 'serie':
   you need to go to the toilet notify a supervisor.} 
 }
 \addFrontPageRule{
-  \deen{Bei unerlaubten Handlungen werden die Prüfungunterlagen aller
-    involvierten Studierenden eingezogen und ihnen die Note 5 erteilt.}{In
-    case of a fraud, all participating students will fail the exam.} 
+  \deen{Bei unerlaubten Handlungen werden die Prüfungunterlagen \textbf{aller
+    involvierten Studierenden} eingezogen und ihnen die Note 5 erteilt.}{In
+    case of a fraud, \textbf{all participating students} will fail the exam.} 
 }
 %%%%%%%%%%%%%% Formatierung %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \qformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}}%
