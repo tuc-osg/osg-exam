@@ -16,6 +16,8 @@
 %% - answers: Musterlösung
 %% - series:  generiert personalisierte Aufgabenblätter aus einer xlsx-Datei
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% 2020-02-12: FIX: Anpassung an Update von openpyxl (get_sheet_names() ist deprecated)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
 \ifLuaTeX
@@ -282,9 +284,8 @@ def genexam(firstname, lastname, studentid, seat, mainfile, job, outpath, mode, 
 
 def students(xlsx_file):
     wb = load_workbook(filename=xlsx_file, read_only=True)
-    sheets = wb.get_sheet_names()
-    ws = wb[sheets[0]]#
-
+    sheets = wb.sheetnames
+    ws = wb[sheets[0]]
     # find the starting row for the data and the columns for id, name and first name
     student_id_col = None
     first_name_col = None
