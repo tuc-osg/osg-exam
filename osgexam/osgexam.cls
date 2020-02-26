@@ -18,6 +18,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 % 2020-02-12: FIX: Anpassung an Update von openpyxl (get_sheet_names() ist deprecated)
 % 2020-02-12: FIX: Robust gegen Leerzeichen in Excel-Tabellenheadern
+% 2020-02-16: Prefix wird auch bei Seriendruck genutzt
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
@@ -250,7 +251,7 @@ import os.path
 from subprocess import call
 from openpyxl import load_workbook
 
-def genexam(firstname, lastname, studentid, seat, mainfile, job, outpath, mode, force=False): 
+def genexam(firstname, lastname, studentid, seat, mainfile, job, outpath, mode, prefix, force=False): 
     '''
     Generates an exam for the given student, if not existing.
     Target file is stored in "outpath", with the student ID as file name.
@@ -272,7 +273,11 @@ def genexam(firstname, lastname, studentid, seat, mainfile, job, outpath, mode, 
         print("Skipping generation of %s, because it exists ..." % targetfile)
         return
     print("Generating " + targetfile)
-    if mode == 'single': job = studentid
+    if mode == 'single':
+        if not prefix:
+            job = studentid
+        else:
+            job = prefix+'-'+studentid
     call('latexmk -C', shell=True)
     cmdline = 'latexmk -pdflua -enable-write18 -jobname={5} -outdir={6} -usepretex="\def\mode{{{7}}}\def\studentid{{{0}}}\def\studentname{{{1} {2}}}\def\seat{{{3}}}" {4}'.format(
         studentid, firstname, lastname, seat, mainfile, job, outpath, mode
@@ -323,7 +328,8 @@ if sys.argv[1] == 'single':
                 job=sys.argv[7],
                 outpath=sys.argv[8] ,
                 mode=sys.argv[9],
-                force=(sys.argv[10]=="True"))
+                prefix=sys.argv[10],
+                force=(sys.argv[11]=="True"))
 
     exit(0)
 
@@ -337,6 +343,7 @@ if sys.argv[1] == 'serie':
                      job=student_id,
                      outpath=sys.argv[4],
                      mode='single',
+                     prefix=sys.argv[5],
                      force=False
                 )
     exit(0)
@@ -354,13 +361,13 @@ if sys.argv[1] == 'serie':
   }{}
   \IfFileExists{\xlsfile}{
     \typeout{***** Generate from "\xlsfile"}
-    \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath'")}
+    \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath' '\osgexam@prefix'")}
   }{
     % Kann Datei nicht finden => Fehler
     \ClassError{\ClassName}{Can't find file '\xlsfile'.}{Provide a existing Excel file.}
   }
 }{
-  \directlua{os.execute("python3 \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' True")}
+  \directlua{os.execute("python3 \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' '\osgexam@prefix' True")}
 }
 % hinterher aufräumen
 \directlua{os.execute("rm \jobname.gen.py")}
