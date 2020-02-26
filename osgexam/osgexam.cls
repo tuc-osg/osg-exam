@@ -19,6 +19,8 @@
 % 2020-02-12: FIX: Anpassung an Update von openpyxl (get_sheet_names() ist deprecated)
 % 2020-02-12: FIX: Robust gegen Leerzeichen in Excel-Tabellenheadern
 % 2020-02-16: Prefix wird auch bei Seriendruck genutzt
+% 2020-02-16: NEW: Option "passedwith" legt Prozentsatz fest, bei der die Prüfung
+               bestanden ist (Vorgabe: 50)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
@@ -53,7 +55,7 @@
 
 \DeclareStringOption[de]{lang} % Sprache 
 \DeclareStringOption[90]{solutiontime} % Prüfungsdauer in Minuten
-%\DeclareStringOption[50]{passedwith} % Prozentsatz, bei der eine Prüfung bestanden ist
+\DeclareStringOption[50]{passedwith} % Prozentsatz, bei der eine Prüfung bestanden ist
 \DeclareBoolOption{impolite} % Lässt Begrüssung und Erfolgswunsch weg (kann Platz sparen)
 \DeclareStringOption[babelshorthands]{quotes} % Steuert Interpretation von Anführungszeichen
 
@@ -504,7 +506,7 @@ if sys.argv[1] == 'serie':
 \RequirePackage{xspace}
 \RequirePackage{tikz}
 \newcounter{pointstopass}%
-\newcommand*{\insertPointsToPass}{\ifundef{\exam@numpoints}{9999}{\setcounter{pointstopass}{\exam@numpoints}\setcounter{pointstopass}{\numexpr\thepointstopass/2\relax}\thepointstopass}}
+\newcommand*{\insertPointsToPass}{\ifundef{\exam@numpoints}{9999}{\setcounter{pointstopass}{\exam@numpoints}\setcounter{pointstopass}{\numexpr\thepointstopass*\osgexam@passedwith/100\relax}\thepointstopass}}
 
 \renewcommand{\maketitle}{
   \begin{tikzpicture}[overlay]
