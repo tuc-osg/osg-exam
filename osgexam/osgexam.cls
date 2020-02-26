@@ -20,7 +20,7 @@
 % 2020-02-12: FIX: Robust gegen Leerzeichen in Excel-Tabellenheadern
 % 2020-02-16: Prefix wird auch bei Seriendruck genutzt
 % 2020-02-16: NEW: Option "passedwith" legt Prozentsatz fest, bei der die Prüfung
-               bestanden ist (Vorgabe: 50)
+%              bestanden ist (Vorgabe: 50)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
@@ -114,7 +114,7 @@
   \typeout{**************************************************************************}
   \typein[\mode]{
     No mode provided.^^J Please enter a proper mode (default is 'e') ^^J
-    - [e]empty exam^^J
+    - [e]mpty exam^^J
     - [a]nswers (solution)^^J
     - [p]ersonalized exam series from MS Excel file^^J
     - [i]ndividually personalized exam^^J
