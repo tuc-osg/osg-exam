@@ -1,5 +1,5 @@
 \newcommand*{\ClassName}{osgexam}
-\ProvidesClass{\ClassName}[2019/03/11 ver 0.1]
+\ProvidesClass{\ClassName}[2021/06/14 ver 0.2]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Diese Klasse hat zwei Funktionen:
 %%  1. Erweiterung der exam-Klasse
@@ -28,47 +28,65 @@
 \else
 \typeout{ ************************************************^^J
   * LuaLaTeX is required to compile this document. ^^J
-  * Sorry ^^J
+  * Sorry! ^^J
    ************************************************
 }
 \expandafter\@@end\fi
 \RequirePackage{luacode}
-%\LuaCodeDebugOn
-\RequirePackage{kvoptions}
-\RequirePackage{kvoptions-patch}
+% \LuaCodeDebugOn
+\RequirePackage{pgfopts}
 \RequirePackage{etoolbox}
-\RequirePackage[utf8]{luainputenc}
-\DeclareBoolOption{development} % Schaltet den Developer-Mode ein. (kann durch Definition eines Modes überschrieben werden)
+\newbool{osgexam@development}
+\newbool{osgexam@seat}
+\newbool{osgexam@impolite}
+%\def\@unknownkeys{}
+\pgfkeys{
+  /osgexam/.cd,
+  development/.code=\booltrue{osgexam@development},
+                                % Schaltet den Developer-Mode ein. (kann durch Definition eines Modes überschrieben werden)
                                 % Im Developer-Mode wird das "normale" LaTeX-Verhalten wieder hergestellt, d.h. es wird eine
                                 % (Dummy-)Version des Prüfungsbogens mit dem Namen der (Haupt-)Quelldatei generiert.
-\DeclareVoidOption{answers}{    % "answers" wird im Developer-Mode an die Exam-Klasse durchgereicht, sonst hat die Option keine
-  \ifundef{\mode}{%             % Wirkung. 
-    \PassOptionsToClass{answers}{exam}
-    }{}
+  answers/.code= \ifundef{\mode}{\PassOptionsToClass{answers}{exam}}{},
+                                % "answers" wird im Developer-Mode an die Exam-Klasse durchgereicht, sonst hat die
+                                % Option keine  % Wirkung.
+  prefix/.store in=\osgexam@prefix,
+  prefix=,
+                                % Prefix für die erzeugten Dateinamen (z.B. prefix="np" => Musterlösung heisst "np-solution.pdf") 
+  xlsfile/.store in=\osgexam@xlsfile,
+  xlsfile=,
+                                % Excel-Datei, die für die Serienerzeugung von Prüfungen genutzt wird
+  outpath/.store in=\osgexam@outpath,
+  outpath=pdf,
+                                % Verzeichnis, in dem erzeugte Dateien ausgegeben werden (außer im Developer-Mode) 
+  seat/.code= \booltrue{osgexam@seat},                 % Wird Sitzplatz auf Aufgabenbogen gedruckt?
+  lang/.store in=\osgexam@lang,                            % Sprache
+  lang=de,
+  solutiontime/.store in=\osgexam@solutiontime,  % Prüfungsdauer in Minuten
+  solutiontime=90,          
+  passedwith/.store in=\osgexam@passedwith,      % Prozentsatz, bei der eine Prüfung bestanden ist
+  passedwith=50,
+  impolite/.code=\booltrue{osgexam@impolite},     % Lässt Begrüssung und Erfolgswunsch weg (kann Platz sparen)
+  quotes/.store in=\osgexam@quotes,                    % Steuert Interpretation von Anführungszeichen
+  quotes=babelshorthands,
+  % Die folgenden Optionen brauchen in der Regel nicht genutzt werden.
+  % Die default*-Optionen setzen die Studentendaten für die Dummy-Modi,
+  defaultfirstname/.store in=\osgexam@defaultfirstname,
+  defaultfirstname=Max,
+  defaultlastname/.store in=\osgexam@defaultlastname,
+  defaultlastname=Mustermann,
+  defaultstudentid/.store in=\osgexam@defaultstudentid,
+  defaultstudentid=123456,
+  defaultseat/.store in=\osgexam@defaultseat,
+  defaultseat=123.45.6/12-A,
+  % Alle anderen Optionen werden direkt an die Exam-Klasse durchgereicht.
+  .unknown/.code={
+    \typeout{*** Unknown Option, pass to exam: \pgfkeyscurrentname}
+    %\PassOptionsToClass{\pgfkeyscurrentname}{exam}
+    },
 }                                
-
-\DeclareStringOption[]{prefix} % Prefix für die erzeugten Dateinamen (z.B. prefix="np" => Musterlösung heisst "np-solution.pdf") 
-
-\DeclareStringOption[]{xlsfile} % Excel-Datei, die für die Serienerzeugung von Prüfungen genutzt wird
-\DeclareStringOption[pdf]{outpath} % Verzeichnis, in dem erzeugte Dateien ausgegeben werden (außer im Developer-Mode) 
-\DeclareBoolOption{seat} % Wird Sitzplatz auf Aufgabenbogen gedruckt?
-
-\DeclareStringOption[de]{lang} % Sprache 
-\DeclareStringOption[90]{solutiontime} % Prüfungsdauer in Minuten
-\DeclareStringOption[50]{passedwith} % Prozentsatz, bei der eine Prüfung bestanden ist
-\DeclareBoolOption{impolite} % Lässt Begrüssung und Erfolgswunsch weg (kann Platz sparen)
-\DeclareStringOption[babelshorthands]{quotes} % Steuert Interpretation von Anführungszeichen
-
-% Die folgenden Optionen brauchen in der Regel nicht genutzt werden.
-% Die default*-Optionen setzen die Studentendaten für die Dummy-Modi,
-\DeclareStringOption[Max]{defaultfirstname}
-\DeclareStringOption[Mustermann]{defaultlastname}
-\DeclareStringOption[123456]{defaultstudentid}
-\DeclareStringOption[123.45.6/12-A]{defaultseat}
-
-% Alle anderen Optionen werden direkt an die Exam-Klasse durchgereicht.
-\DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{exam}}
-\ProcessKeyvalOptions{osgexam}
+\ProcessPgfOptions{/osgexam}
+%\DeclareOption*{\PassOptionsToClass{\CurrentOption}{exam}}
+\typeout{*** After process}
 \ifboolexpr{ bool{osgexam@development} and test{\ifundef{\mode}} }{
   \ClassWarning{\ClassName}{developer mode active}
   \def\mode{develop}
@@ -363,7 +381,7 @@ if sys.argv[1] == 'serie':
   }{}
   \IfFileExists{\xlsfile}{
     \typeout{***** Generate from "\xlsfile"}
-    \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath' '\osgexam@prefix'")}
+    \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '=' '\osgexam@prefix'")}
   }{
     % Kann Datei nicht finden => Fehler
     \ClassError{\ClassName}{Can't find file '\xlsfile'.}{Provide a existing Excel file.}
@@ -379,22 +397,61 @@ if sys.argv[1] == 'serie':
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Hier beginnt die eigentliche LaTeX-Klasse.
 %% Optionen sind zu diesem Zeitpunkt aber schon verarbeitet.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\DisableKeyvalOption{\ClassName}{lang} % Optionen mit (möglicherweise) geschweiften Klammern verwirren "normale" Klassen/Pakete
-\LoadClass[twoside,addpoints]{exam}
-\RequirePackage{fontspec}
-\setmainfont{PT Serif} %{etwa: Times New Roman}
-% ToDo: Passende Sans- und Mono-Fonts setzen?
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\DisableKeyvalOption{\ClassName}{lang} % Optionen mit (möglicherweise) geschweiften Klammern verwirren "normale" Klassen/Pakete
+%\LoadClass[twoside,addpoints]{exam}
+\PassOptionsToClass{twoside,addpoints}{exam}
+\LoadClass{exam}
+\AtEndPreamble{
+  \usepackage{fontspec}
+  \setmainfont{PT Serif} %{etwa: Times New Roman}
+  % ToDo: Passende Sans- und Mono-Fonts setzen?
+}
 %%%%%%%%%%%%%% Sprache %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\RequirePackage[babelshorthands]{polyglossia}
+\RequirePackage[babelshorthands]{polyglossia}
+\setmainlanguage{english}
+\setotherlanguages{english,german}
 \ifstreq{\osgexam@quotes}{babelshorthands}{
-  \RequirePackage[babelshorthands]{polyglossia}
   \typeout{****** Option "babelshorthands"}
-  \AtEndPreamble{
-    \defineshorthand{"`}{\openautoquote}
-    \defineshorthand{"'}{\closeautoquote} 
-  }
-}{
+  % \AfterEndPreamble{
+  %\setmainlanguage{english}
+  %\setotherlanguages{english,german}
+   % \define@boolkey{english}[english@]{babelshorthands}[true]{}
+   % \setkeys{english}{babelshorthands=true}
+   % \def\english@shorthands{%
+    %  \def\language@group{english}%
+     % \bbl@activate{"}%
+     % \declare@shorthand{english}{"`}{\openautoquote}%
+     % \declare@shorthand{english}{"'}{\closeautoquote}
+    %}
+   % \AtEndPreamble{
+   %   \setmainlanguage{english}
+   %   \english@shorthands
+   % }
+
+
+    
+    % }
+    % \makeatletter
+    %  \initiate@active@char{"}
+    %  \addto\extrasenglish{\languageshorthands{english}\bbl@activate{"}}
+    %  \addto\noextrasenglish{\bbl@deactivate{"}}
+    %  \declare@shorthand{german}{"`}{\openautoquote}%
+    %  \declare@shorthand{german}{"'}{\closeautoquote}
+    %  \declare@shorthand{english}{"`}{\openautoquote}%
+%     \declare@shorthand{english}{"'}{\closeautoquote}
+      %\addto\extrasenglish{\languageshorthands{english}}
+  % %\RequirePackage[autostyle=true,german=quotes,english=american]{csquotes} 
+      %\defineshorthand{"`}{\openautoquote}
+      %\defineshorthand{"'}{\closeautoquote}
+      %\makeatother
+     % \setmainlanguage[babelshorthands=true]{english}
+  %}
+      \RequirePackage[autostyle=true,german=quotes,english=american]{csquotes} 
+    }{
+      \RequirePackage[autostyle=true,german=quotes,english=american]{csquotes} 
+
   \RequirePackage{polyglossia}
   \ifstreq{\osgexam@quotes}{ascii}{
     \typeout{******* Quotes: ascii} 
@@ -407,10 +464,8 @@ if sys.argv[1] == 'serie':
   }
 }
 % Damit die Shorthands funktionieren, muss Deutsch als Standardsprache festgelegt werden (WTF?) Das wird später ggf. überschrieben.
-\setmainlanguage{german}
-\setotherlanguage{english}
- 
-\RequirePackage[autostyle=true,german=quotes,english=american]{csquotes} 
+%\setmainlanguage{german}
+%\setotherlanguage{english}
 % Die Sprachoption wird auf Einzelbooleans heruntergebrochen
 \newbool{oex@lang@de} % Deutsch gesetzt
 \newbool{oex@lang@en} % Englisch gesetzt
@@ -677,10 +732,10 @@ if sys.argv[1] == 'serie':
     case of a fraud, \textbf{all participating students} will fail the exam.} 
 }
 %%%%%%%%%%%%%% Formatierung %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\qformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}}%
-  \dotfill (\totalpoints\oex@nbqbonuspoints~\oex@sumpointpoints{\totalpoints}{\totalbonuspoints})}
-\bonusqformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}%
-  (Bonus)}\def\@points{\totalbonuspoints} \dotfill (+\@points~\bonuspoints)}
+%\qformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}}%
+%  \dotfill (\totalpoints\oex@nbqbonuspoints~\oex@sumpointpoints{\totalpoints}{\totalbonuspoints})}
+%\bonusqformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}%
+%  (Bonus)}\def\@points{\totalbonuspoints} \dotfill (+\@points~\bonuspoints)}
 % pointpoints wird für Subpunkte (am Rand) genutzt
 \pointpoints{\ldeen{Punkt}{point}}{\ldeen{Punkte}{points}}
 \bonuspointpoints{\ldeen{Punkt}{point}}{\ldeen{Punkte}{points}}
@@ -745,7 +800,7 @@ if sys.argv[1] == 'serie':
   \newcommand*{\insertCourseSemester}{#2}
 }
 %% Lösungszeit in Minuten. Standardwert ist 90
-\DeclareRobustCommand*{\solutionTime}[1]{\setkeys{osgexam}{solutiontime=#1}}
+\DeclareRobustCommand*{\solutionTime}[1]{\pgfkeys{/osgexam/solutiontime=#1}}
 
 %% Zusätzliche Punkte, die als Bonuspunkte in der Punkttabelle erscheinen.
 %   Optional kann ein Titel eingegeben werden.
@@ -762,6 +817,7 @@ if sys.argv[1] == 'serie':
 }
 
 \AfterEndPreamble{
+%  \RequirePackage[utf8]{luainputenc}
   \maketitle
 }
 %%%%%%%%%%%%%% Watermark %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -769,8 +825,9 @@ if sys.argv[1] == 'serie':
 \RequirePackage[
   color=black,
   opacity=0.1,
-  contents={\sffamily\textbf{\ldeen{Musterlösung}{Standard Solution}}}
+  contents={Foo}
   ]{background}
+  \backgroundsetup{contents=\sffamily\bfseries\ldeen{Musterlösung}{Standard Solution}}
 \fi
   
 %%%%%%%%%%%%%% Convenience %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
