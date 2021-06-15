@@ -3,9 +3,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Diese Klasse hat zwei Funktionen:
 %%  1. Erweiterung der exam-Klasse
-%%  2. Konfigurator und Launcher für die Generation von verschiedenen Typen
+%%  2. Konfigurator und Launcher für die Generierung von verschiedenen Typen
 %%     von Dokumenten, die mit dieser Klasse generiert werden können.
-%%     Dies entspricht verschiedenen Modi.
+%%     Dies entspricht den verschiedenen Modi.
 %%
 %% Mögliche Modi:
 %% - exam:    leeres Aufgabenblatt zum händischen Ausfüllen
@@ -20,7 +20,8 @@
 % 2020-02-12: FIX: Robust gegen Leerzeichen in Excel-Tabellenheadern
 % 2020-02-16: Prefix wird auch bei Seriendruck genutzt
 % 2020-02-16: NEW: Option "passedwith" legt Prozentsatz fest, bei der die Prüfung
-%              bestanden ist (Vorgabe: 50)
+%                        bestanden ist (Vorgabe: 50)
+% 2021-06-14: FIX: Umstellung auf pgf-Keys (da keyval-patch in MikTeX 2020 nicht mehr läuft)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
@@ -42,13 +43,23 @@
 %\def\@unknownkeys{}
 \pgfkeys{
   /osgexam/.cd,
-  development/.code=\booltrue{osgexam@development},
-                                % Schaltet den Developer-Mode ein. (kann durch Definition eines Modes überschrieben werden)
-                                % Im Developer-Mode wird das "normale" LaTeX-Verhalten wieder hergestellt, d.h. es wird eine
-                                % (Dummy-)Version des Prüfungsbogens mit dem Namen der (Haupt-)Quelldatei generiert.
-  answers/.code= \ifundef{\mode}{\PassOptionsToClass{answers}{exam}}{},
-                                % "answers" wird im Developer-Mode an die Exam-Klasse durchgereicht, sonst hat die
-                                % Option keine  % Wirkung.
+  development/.is choice,
+  development/true/.code={
+    \booltrue{osgexam@development}
+    \typeout{*** Developer mode}
+  },
+  development/.default=true,
+  % Schaltet den Developer-Mode ein. (kann durch Definition eines Modes überschrieben werden)
+  % Im Developer-Mode wird das "normale" LaTeX-Verhalten wieder hergestellt, d.h. es wird eine
+  % (Dummy-)Version des Prüfungsbogens mit dem Namen der (Haupt-)Quelldatei generiert.
+  development/answers/.code={
+    \booltrue{osgexam@development}
+    \def\osgexam@mode{answer}
+    \PassOptionsToClass{answers}{exam}
+    \typeout{*** Developer/answer mode}
+  },
+  % bei developer=answers wird "answers" an die Exam-Klasse durchgereicht, sonst hat die
+  % Option keine  % Wirkung.
   prefix/.store in=\osgexam@prefix,
   prefix=,
                                 % Prefix für die erzeugten Dateinamen (z.B. prefix="np" => Musterlösung heisst "np-solution.pdf") 
@@ -81,11 +92,10 @@
   % Alle anderen Optionen werden direkt an die Exam-Klasse durchgereicht.
   .unknown/.code={
     \typeout{*** Unknown Option, pass to exam: \pgfkeyscurrentname}
-    %\PassOptionsToClass{\pgfkeyscurrentname}{exam}
+    \PassOptionsToClass{\pgfkeyscurrentname}{exam}
     },
 }                                
 \ProcessPgfOptions{/osgexam}
-%\DeclareOption*{\PassOptionsToClass{\CurrentOption}{exam}}
 \typeout{*** After process}
 \ifboolexpr{ bool{osgexam@development} and test{\ifundef{\mode}} }{
   \ClassWarning{\ClassName}{developer mode active}
