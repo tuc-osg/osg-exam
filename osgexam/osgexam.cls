@@ -21,7 +21,10 @@
 % 2020-02-16: Prefix wird auch bei Seriendruck genutzt
 % 2020-02-16: NEW: Option "passedwith" legt Prozentsatz fest, bei der die Prüfung
 %                        bestanden ist (Vorgabe: 50)
-% 2021-06-14: FIX: Umstellung auf pgf-Keys (da keyval-patch in MikTeX 2020 nicht mehr läuft)
+%
+% 2021-06-14: Version 0.2
+%  - Umstellung auf pgf-Keys (da keyval-patch in MikTeX 2020 nicht mehr läuft)
+%  - Option "answers" ist nun Wert von "development"
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
@@ -91,12 +94,11 @@
   defaultseat=123.45.6/12-A,
   % Alle anderen Optionen werden direkt an die Exam-Klasse durchgereicht.
   .unknown/.code={
-    \typeout{*** Unknown Option, pass to exam: \pgfkeyscurrentname}
+    \typeout{*** Unknown option, pass to exam: \pgfkeyscurrentname}
     \PassOptionsToClass{\pgfkeyscurrentname}{exam}
     },
 }                                
 \ProcessPgfOptions{/osgexam}
-\typeout{*** After process}
 \ifboolexpr{ bool{osgexam@development} and test{\ifundef{\mode}} }{
   \ClassWarning{\ClassName}{developer mode active}
   \def\mode{develop}
@@ -742,6 +744,11 @@ if sys.argv[1] == 'serie':
     case of a fraud, \textbf{all participating students} will fail the exam.} 
 }
 %%%%%%%%%%%%%% Formatierung %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\qformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}}%
+  \dotfill (\totalpoints)}
+\bonusqformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}%
+   (Bonus)} \dotfill (+\totalbonuspoints)}
+% ToDo: Wiederherstellen des Parsens von gemischt regulären und optionalen Punkten
 %\qformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}}%
 %  \dotfill (\totalpoints\oex@nbqbonuspoints~\oex@sumpointpoints{\totalpoints}{\totalbonuspoints})}
 %\bonusqformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}%
