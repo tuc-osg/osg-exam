@@ -426,54 +426,31 @@ if sys.argv[1] == 'serie':
 \setotherlanguages{english,german}
 \ifstreq{\osgexam@quotes}{babelshorthands}{
   \typeout{****** Option "babelshorthands"}
-  % \AfterEndPreamble{
-  %\setmainlanguage{english}
-  %\setotherlanguages{english,german}
-   % \define@boolkey{english}[english@]{babelshorthands}[true]{}
-   % \setkeys{english}{babelshorthands=true}
-   % \def\english@shorthands{%
-    %  \def\language@group{english}%
-     % \bbl@activate{"}%
-     % \declare@shorthand{english}{"`}{\openautoquote}%
-     % \declare@shorthand{english}{"'}{\closeautoquote}
-    %}
-   % \AtEndPreamble{
-   %   \setmainlanguage{english}
-   %   \english@shorthands
-   % }
-
-
-    
-    % }
-    % \makeatletter
-    %  \initiate@active@char{"}
-    %  \addto\extrasenglish{\languageshorthands{english}\bbl@activate{"}}
-    %  \addto\noextrasenglish{\bbl@deactivate{"}}
-    %  \declare@shorthand{german}{"`}{\openautoquote}%
-    %  \declare@shorthand{german}{"'}{\closeautoquote}
-    %  \declare@shorthand{english}{"`}{\openautoquote}%
-%     \declare@shorthand{english}{"'}{\closeautoquote}
-      %\addto\extrasenglish{\languageshorthands{english}}
-  % %\RequirePackage[autostyle=true,german=quotes,english=american]{csquotes} 
-      %\defineshorthand{"`}{\openautoquote}
-      %\defineshorthand{"'}{\closeautoquote}
-      %\makeatother
-     % \setmainlanguage[babelshorthands=true]{english}
-  %}
-      \RequirePackage[autostyle=true,german=quotes,english=american]{csquotes} 
-    }{
-      \RequirePackage[autostyle=true,german=quotes,english=american]{csquotes} 
-
-  \RequirePackage{polyglossia}
-  \ifstreq{\osgexam@quotes}{ascii}{
-    \typeout{******* Quotes: ascii} 
-    \AfterEndPreamble{
-      \MakeOuterQuote{"}
-      \EnableQuotes
-    }
-  }{
-    \typeout{******* Unknown Quotes: \osgexam@quotes}
+  \setmainlanguage{english}
+  \define@boolkey{english}[english@]{babelshorthands}[true]{}
+  \def\english@shorthands{%
+    \def\language@group{english}%
+    \bbl@activate{"}%
+    \declare@shorthand{english}{"`}{\openautoquote}%
+    \declare@shorthand{english}{"'}{\closeautoquote}
   }
+  \AtEndPreamble{
+    \setmainlanguage{english}
+    \english@shorthands
+   }
+   \RequirePackage[autostyle=true,german=quotes,english=american]{csquotes} 
+ }{
+   \RequirePackage[autostyle=true,german=quotes,english=american]{csquotes} 
+   \RequirePackage{polyglossia}
+   \ifstreq{\osgexam@quotes}{ascii}{
+     \typeout{******* Quotes: ascii} 
+     \AfterEndPreamble{
+       \MakeOuterQuote{"}
+       \EnableQuotes
+     }
+   }{
+     \typeout{******* Unknown Quotes: \osgexam@quotes}
+   }
 }
 % Damit die Shorthands funktionieren, muss Deutsch als Standardsprache festgelegt werden (WTF?) Das wird später ggf. überschrieben.
 %\setmainlanguage{german}
