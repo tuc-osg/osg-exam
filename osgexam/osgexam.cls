@@ -726,8 +726,8 @@ if sys.argv[1] == 'serie':
 \bonusqformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}%
    (Bonus)} \dotfill (+\totalbonuspoints)}
 % ToDo: Wiederherstellen des Parsens von gemischt regulären und optionalen Punkten
-%\qformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}}%
-%  \dotfill (\totalpoints\oex@nbqbonuspoints~\oex@sumpointpoints{\totalpoints}{\totalbonuspoints})}
+\qformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}}%
+  \dotfill (\totalpoints\oex@nbqbonuspoints~\oex@sumpointpoints{\totalpoints}{\totalbonuspoints})}
 %\bonusqformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}%
 %  (Bonus)}\def\@points{\totalbonuspoints} \dotfill (+\@points~\bonuspoints)}
 % pointpoints wird für Subpunkte (am Rand) genutzt
@@ -761,8 +761,8 @@ if sys.argv[1] == 'serie':
   }
 }
 \DeclareRobustCommand{\oex@sumpointpoints}[2]{%
-  \ifdef{#1}{%
-    \ifdef{#2}{%
+  \if\relax\detokenize\expandafter{\romannumeral-0#1}\relax%
+    \if\relax\detokenize\expandafter{\romannumeral-0#2}\relax%
       \luadirect{
         local p=tonumber(\luastring{#1})
         local b=tonumber(\luastring{#2})
@@ -774,8 +774,7 @@ if sys.argv[1] == 'serie':
           tex.print(oexpointpoints['s']) 
         end
         }%
-    }{}%
-  }{}%
+  \fi\fi%
 }
 % Multiple Choice
 \RequirePackage{amssymb}
