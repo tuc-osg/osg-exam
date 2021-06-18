@@ -520,13 +520,13 @@ if sys.argv[1] == 'serie':
 %    wird der entsprechende Text anschließend in einer neuen Zeile und in einer Alternativfarbe ausgegeben.
 % * \sdeen{<deutscher Text>}{<englischer Text>}: wie \ldeen, nur wird statt einer neuen Zeile ein Schrägstrich ("/") gesetzt
 % * \ldeen{<deutscher Text>}{<englischer Text>}: gibt *nur* den Text der Erstsprache aus.
-\DeclareRobustCommand{\deen}[2]{\def\oex@tempde{\booltrue{oex@active@de}\textgerman{#1}\boolfalse{oex@active@de}}%
+\newrobustcmd{\deen}[2]{\def\oex@tempde{\booltrue{oex@active@de}\textgerman{#1}\boolfalse{oex@active@de}}%
   \def\oex@tempen{\booltrue{oex@active@en}\textenglish{#2}\boolfalse{oex@active@en}}%
   \oex@frstlang\ifbool{oex@lang@twolanguages}{\newline\oex@scndlang}{}}
-\DeclareRobustCommand{\sdeen}[2]{\def\oex@tempde{\booltrue{oex@active@de}\textgerman{#1}\boolfalse{oex@active@de}}%
+\newrobustcmd*{\sdeen}[2]{\def\oex@tempde{\booltrue{oex@active@de}\textgerman{#1}\boolfalse{oex@active@de}}%
   \def\oex@tempen{\booltrue{oex@active@en}\textenglish{#2}\boolfalse{oex@active@en}}%
   \oex@frstlang\ifbool{oex@lang@twolanguages}{/\oex@scndlang}{}}
-\DeclareRobustCommand{\ldeen}[2]{\def\oex@tempde{\booltrue{oex@active@de}\textgerman{#1}\boolfalse{oex@active@de}}%
+\newrobustcmd{\ldeen}[2]{\def\oex@tempde{\booltrue{oex@active@de}\textgerman{#1}\boolfalse{oex@active@de}}%
   \def\oex@tempen{\booltrue{oex@active@en}\textenglish{#2}\boolfalse{oex@active@en}}\oex@frstlang}
 % Wie \ldeen, richtet sich aber nicht nach der Erstsprache, sondern kann *innerhalb* der anderen Sprachkommandos
 % verwendet werden, gibt also stets den Text in der Sprache des Kontexts aus.
