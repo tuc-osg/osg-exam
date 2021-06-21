@@ -1,19 +1,54 @@
-\documentclass{ltxdoc}
-\usepackage{creatdtx}
+\documentclass[
+load-preamble
+]{cnltx-doc}
+
+\selectlanguage{ngerman}
+%\usepackage{readprov}
+%\usepackage{xspace}
+\setcnltx{
+  class=osgexam,
+  subtitle={Eine Klasse für Examen an der Professur Betriebssysteme der TU~Chemnitz},
+  % build-title,
+  % date=2021-06-20,
+  % version=0.2, 
+  authors=Matthias Werner,
+  email=matthias.werner@informatik.tu-chemnitz.de,
+  % abstract={Die \LaTeX-Klasse \cls*{exam} von \textsf{Philip Hirschhorn} eigenet sich exellent zur Erstellung von
+  %   Klausurdokumenten mit \LaTeX. Die Klasse foo %\osgexam\
+  %   baut auf der \cls*{exam}-Klasse auf, passt sie an die
+  %  Anforderungen für Klausuren an, die an der Professur für Betriebssysteme der TU~Chemnitz existieren und stellt
+  %  einige Erweiterungen sowie ein Buildsystem für verschiedene Versionen der Klausur zur Verfügung zur Verfügung}
+}
+
 
 \begin{document}
-\title{Die \verb!osgexam!-Klasse}
-\author{Matthias Werner}
+%\GetFileInfo{osgexam.cls}
+%\title{Die osgexam-Klasse}
+%\author{Matthias Werner}
 \maketitle
 
-\begin{abstract}
-    Die \LaTeX-Klasse \verb!exam! von \textsf{Philip Hirschhorn} eigenet sich exellent zur Erstellung von
-    Klausurdokumenten mit \LaTeX. Die Klasse \verb!osgexam! baut auf der \verb!exam!-Klasse auf, passt sie an die
-    Anforderungen für Klausuren an, die an der Professur für Betriebssysteme der TU~Chemnitz existieren und stellt
-    einige Erweiterungen zur Verfügung.
-\end{abstract}
 
-\section{Installation}
+% \end{abstract}
+\part{Einführung}
+\section{Inhalt}
+Die \osgexam-Klasse hat zwei Funktionen
+\begin{enumerate}
+  \item Sie erweitert die \cls{exam}-Klasse von \textsf{Philip Hirschhorn} entsprechend den Anforderungen der
+    Professur Betriebssysteme der TU~Chemnitz
+  \item Sie dient als Buildsystem für verschiedene Versionen einer Klausur, einschließlich der Generierung eines
+    kompletten Klassensatzes von Klausuren aus den Daten einer Excel-Datei.
+\end{enumerate}
+Die \osgexam\ funktioniert nur mit \texttt{lualatex}, wobei andere Programm aufgerufen werden. Daher muss die Übersetzung
+stets mit der Aktivierung der Shell-Escape-Funktion vorgenuommen werden, also z.B.:\medskip
+
+\noindent\verb!>lualatex -shell-escape myexam.tex!
+
+\medskip
+Alternativ kann \texttt{latexmk} mit der im Paker zur Verfügung gestellten \texttt{latexmkrc}-Datei genutzt werden:
+\medskip
+
+\noindent\verb!>latexmkrc myexam.tex!
+\medskip
 
 
 \end{document}
