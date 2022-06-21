@@ -10,3 +10,8 @@
 /examples/pdf/
 /examples/osgexam.cls
 /examples/latexmkrc
+doc/osgexam-doc.glo
+*.glsdefs
+*.ido
+*.out
+*.xdy
