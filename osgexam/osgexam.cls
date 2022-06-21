@@ -1,5 +1,5 @@
-\newcommand*{\ClassName}{osgexam}
-\ProvidesClass{\ClassName}[2021/06/14 ver 0.2]
+\newcommand*{\MyClassName}{osgexam}
+\ProvidesClass{\MyClassName}[2021/06/14 0.2]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Diese Klasse hat zwei Funktionen:
 %%  1. Erweiterung der exam-Klasse
@@ -100,7 +100,7 @@
 }                                
 \ProcessPgfOptions{/osgexam}
 \ifboolexpr{ bool{osgexam@development} and test{\ifundef{\mode}} }{
-  \ClassWarning{\ClassName}{developer mode active}
+  \ClassWarning{\MyClassName}{developer mode active}
   \def\mode{develop}
 }{
   \RequirePackage{ifplatform}          % für Test auf shell escape
@@ -396,7 +396,7 @@ if sys.argv[1] == 'serie':
     \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '=' '\osgexam@prefix'")}
   }{
     % Kann Datei nicht finden => Fehler
-    \ClassError{\ClassName}{Can't find file '\xlsfile'.}{Provide a existing Excel file.}
+    \ClassError{\MyClassName}{Can't find file '\xlsfile'.}{Provide a existing Excel file.}
   }
 }{
   \directlua{os.execute("python3 \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' '\osgexam@prefix' True")}
@@ -410,7 +410,7 @@ if sys.argv[1] == 'serie':
 %% Hier beginnt die eigentliche LaTeX-Klasse.
 %% Optionen sind zu diesem Zeitpunkt aber schon verarbeitet.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\DisableKeyvalOption{\ClassName}{lang} % Optionen mit (möglicherweise) geschweiften Klammern verwirren "normale" Klassen/Pakete
+%\DisableKeyvalOption{\MyClassName}{lang} % Optionen mit (möglicherweise) geschweiften Klammern verwirren "normale" Klassen/Pakete
 %\LoadClass[twoside,addpoints]{exam}
 \PassOptionsToClass{twoside,addpoints}{exam}
 \LoadClass{exam}
@@ -475,7 +475,7 @@ if sys.argv[1] == 'serie':
   % Überprüfe, ob valides Sprachkürzel angegeben wurde
   \ifstreq{#1}{de}{}{
     \ifstreq{#1}{en}{}{
-      \ClassError{\ClassName}{unknown language '#1' in option}{Only 'de' and 'en' are allowed here.}
+      \ClassError{\MyClassName}{unknown language '#1' in option}{Only 'de' and 'en' are allowed here.}
     }
   }
   \csuse{oex@lang@#1true} % Setzt das Boolean für die Sprachnutzung

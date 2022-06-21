@@ -15,3 +15,4 @@ doc/osgexam-doc.glo
 *.ido
 *.out
 *.xdy
+doc/osgexam-example.gen.py
