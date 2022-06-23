@@ -1,5 +1,5 @@
 \newcommand*{\MyClassName}{osgexam}
-\ProvidesClass{\MyClassName}[2021/06/14 0.2]
+\ProvidesClass{\MyClassName}[2021/06/14 0.2a ]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Diese Klasse hat zwei Funktionen:
 %%  1. Erweiterung der exam-Klasse
@@ -9,12 +9,12 @@
 %%
 %% Mögliche Modi:
 %% - exam:    leeres Aufgabenblatt zum händischen Ausfüllen
-%% - single:  personalisiertes einzelnes Aufgabenblatt
-%% - dummy:   personalisiertes Aufgabenblatt mit Default-Daten
+%% - single:    personalisiertes einzelnes Aufgabenblatt
+%% - dummy: personalisiertes Aufgabenblatt mit Default-Daten
 %% - develop: wie 'dummy', aber das PDF wird direkt im Arbeitverzeichnis
-%%            mit dem Namen des Quellfiles definiert.
+%%                 mit dem Namen des Quellfiles definiert.
 %% - answers: Musterlösung
-%% - series:  generiert personalisierte Aufgabenblätter aus einer xlsx-Datei
+%% - series:     generiert personalisierte Aufgabenblätter aus einer xlsx-Datei
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 % 2020-02-12: FIX: Anpassung an Update von openpyxl (get_sheet_names() ist deprecated)
 % 2020-02-12: FIX: Robust gegen Leerzeichen in Excel-Tabellenheadern
@@ -37,7 +37,7 @@
 }
 \expandafter\@@end\fi
 \RequirePackage{luacode}
-% \LuaCodeDebugOn
+%\LuaCodeDebugOn
 \RequirePackage{pgfopts}
 \RequirePackage{etoolbox}
 \newbool{osgexam@development}
@@ -50,6 +50,9 @@
   development/true/.code={
     \booltrue{osgexam@development}
     \typeout{*** Developer mode}
+  },
+  development/false/.code={
+    \boolfalse{osgexam@development}
   },
   development/.default=true,
   % Schaltet den Developer-Mode ein. (kann durch Definition eines Modes überschrieben werden)
@@ -81,7 +84,7 @@
   passedwith=50,
   impolite/.code=\booltrue{osgexam@impolite},     % Lässt Begrüssung und Erfolgswunsch weg (kann Platz sparen)
   quotes/.store in=\osgexam@quotes,                    % Steuert Interpretation von Anführungszeichen
-  quotes=babelshorthands,
+  quotes=latex,
   % Die folgenden Optionen brauchen in der Regel nicht genutzt werden.
   % Die default*-Optionen setzen die Studentendaten für die Dummy-Modi,
   defaultfirstname/.store in=\osgexam@defaultfirstname,
@@ -393,7 +396,7 @@ if sys.argv[1] == 'serie':
   }{}
   \IfFileExists{\xlsfile}{
     \typeout{***** Generate from "\xlsfile"}
-    \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '=' '\osgexam@prefix'")}
+    \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath' '\osgexam@prefix'")}
   }{
     % Kann Datei nicht finden => Fehler
     \ClassError{\MyClassName}{Can't find file '\xlsfile'.}{Provide a existing Excel file.}
@@ -449,7 +452,8 @@ if sys.argv[1] == 'serie':
        \EnableQuotes
      }
    }{
-     \typeout{******* Unknown Quotes: \osgexam@quotes}
+     % Option latex oder beliebiger Wert: Standardverhalten von LaTeX 
+     \typeout{******* Quotes: latex (\osgexam@quotes)}
    }
 }
 % Damit die Shorthands funktionieren, muss Deutsch als Standardsprache festgelegt werden (WTF?) Das wird später ggf. überschrieben.

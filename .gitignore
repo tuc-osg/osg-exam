@@ -16,3 +16,6 @@ doc/osgexam-doc.glo
 *.out
 *.xdy
 doc/osgexam-example.gen.py
+doc/pdf/pn-empty.pdf
+doc/pdf/pn-empty.pdf
+*.toc
