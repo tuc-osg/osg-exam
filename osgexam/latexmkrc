@@ -1,3 +1,4 @@
 # encforce LuaLaTex and shell escape
 $pdf_mode=4;
+$clean_ext="glo glsdefs ido xdy";
 $lualatex = "lualatex %O -shell-escape %S";
