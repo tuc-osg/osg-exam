@@ -4,67 +4,322 @@ babel=ngerman
 ]{skdoc}
 \microtypesetup{disable=true}
 
-\makeatletter
- \providecommand*\@nameundef[1]{%
-   \expandafter\let\csname #1\endcsname\@undefined}
-\selectlanguage{ngerman}
+%\changes{0.1}{Initiale Version}
+%\changes{0.2}{Umstellung auf pdfkeys, Anpassung an neue Version von openpyxl, }
+%\changes{0.2a}{Dokumentation}
 
-% Metadata
-
+\usepackage{enumitem}
 \usepackage{readprov}
-%\@nameundef{\ClassName}
-% \makeatother
+\usepackage{listings}
+\lstloadlanguages{[LaTeX]TeX}
+\lstset{language=TeX,basicstyle=\small\ttfamily,
+  morekeywords={documentclass,xdeen},
+frame=leftline}
+
+
 \ReadFileInfos{osgexam.cls}
-%\usepackage{xspace}
-%\package{osgexam}
+\package{osgexam}
 \version{\fileversion}
+\makeatletter
+\deftripstyle{skdoc}%
+    {}{}{}%
+    {\small Die~\textbf{\pkg*{\@package}}-Klasse,~v\@version}{}{\small\pagemark}
+%\cls{osgexam}
+\makeatother
 \author{Matthias Werner}
 \email{matthias.werner@informatik.tu-chemnitz.de}
-\title{Die \pkg{osgexam}-Klasse}
+\title{Die \thepkg-Klasse}
 \subtitle{Eine Klasse für Examen an der Professur Betriebssysteme der TU~Chemnitz}
-%\setcnltx{
-  %class=osgexam,
-  %subtitle={Eine Klasse für Examen an der Professur Betriebssysteme der TU~Chemnitz},
-  % build-title,
-  % date=2021-06-20,
-  % version=0.2, 
-  %authors=Matthias Werner,
-  %email=matthias.werner@informatik.tu-chemnitz.de,
-  % abstract={Die \LaTeX-Klasse \cls*{exam} von \textsf{Philip Hirschhorn} eigenet sich exellent zur Erstellung von
-  %   Klausurdokumenten mit \LaTeX. Die Klasse foo %\osgexam\
-  %   baut auf der \cls*{exam}-Klasse auf, passt sie an die
-  %  Anforderungen für Klausuren an, die an der Professur für Betriebssysteme der TU~Chemnitz existieren und stellt
-  %  einige Erweiterungen sowie ein Buildsystem für verschiedene Versionen der Klausur zur Verfügung zur Verfügung}
-%}
-
 
 \begin{document}
 \maketitle
 \begin{abstract}
     Die \LaTeX-Klasse \pkg{exam} von \textsf{Philip Hirschhorn} eigenet sich exellent zur Erstellung von
-    Klausurdokumenten mit \LaTeX. Die Klasse \pkg{osgexam}
-     baut auf der \pkg{exam}-Klasse auf, passt sie an die
+    Klausurdokumenten mit \LaTeX. Die Klasse \thepkg\  baut auf der \pkg{exam}-Klasse auf, passt sie an die
     Anforderungen für Klausuren an, die an der Professur für Betriebssysteme der TU~Chemnitz existieren und stellt
     einige Erweiterungen sowie ein Buildsystem für verschiedene Versionen der Klausur zur Verfügung.
 \end{abstract}
-%\GetFileInfo{osgexam.cls}
-%\title{Die osgexam-Klasse}
-%\author{Matthias Werner}
+
+\tableofcontents\clearpage
 
 
-
-% \end{abstract}Einführung
-%\part{Einführung}
 \section{Einführung}
+\subsection{Zweck}
 Die \pkg{osgexam}-Klasse hat zwei Funktionen
 \begin{enumerate}
-  \item Sie erweitert die \pkg{exam}-Klasse von \textsf{Philip Hirschhorn} entsprechend den Anforderungen der
-    Professur Betriebssysteme der TU~Chemnitz
+  \item Sie erweitert bzw.\ konfiguriert die \pkg{exam}-Klasse von \textsf{Philip Hirschhorn} entsprechend den
+    Anforderungen der Professur Betriebssysteme der TU~Chemnitz
   \item Sie dient als Buildsystem für verschiedene Versionen einer Klausur, einschließlich der Generierung eines
     kompletten Klassensatzes von Klausuren aus den Daten einer Excel-Datei.
 \end{enumerate}
-Die \pkg{osgexam}-Klasse funktioniert nur mit \texttt{lualatex}, wobei andere Programm aufgerufen werden. Daher muss die Übersetzung
-stets mit der Aktivierung der Shell-Escape-Funktion vorgenuommen werden, also z.B.:\medskip
+\subsection{Systemvoraussetzungen}
+Die \thepkg-Klasse verlangt Lua\LaTeX\ und läuft nicht mit pdfTeX. Für den Seriendruck ist \file{latexmk} sowie ein Python3 mit installierten
+\file{openpyxl} sowie notwendig. Letzteres kann z.\;B.\ über
+
+\begin{verbatim}
+>pip3 install openpyxl
+\end{verbatim}
+in der Shell installiert werden.
+
+\subsection{Dokumenttypen und Modi}
+\label{sec:doctypes}
+Mit dieser Klasse können verschiedene Arten von Dokumenten erzeugt werden, die mit verschiedenen Modi verbunden sind:
+\begin{itemize}[nosep]
+  \item Nichtpersonalisiertes (also leere) Aufgabenblatt (Modus \opt{empty})
+  \item Personalisiertes Aufgabenblatt mit vorgegebenen Daten (Modus \opt{single})
+  \item Personalisiertes Aufgabenblatt mit Dummy-Daten (Modus \opt{dummy})
+  \item Serie von personaliserten Aufgabenblättern entsprechend den Daten in einer Exceldatei (Modus \opt{series})
+  \item Musterlösung  (Modus \opt{answers})
+\end{itemize}
+Es ist vorgesehen, den jeweiligen Modus interaktiv zu setzen.
+Während der Entwicklung einer Klausur ist die Interaktivität vermutlich störend, daher kann sie mit der
+\opt{developmet}-Option (siehe \ref{sec:options}) abgeschaltet werden. Jedoch stehen dann einige der Modi nicht mehr zur
+Verfügung.
+
+Um auch während der Entwicklung auf diese Modi zurückgreifen zu können, kann in Quelldokument noch vor
+\cs{documentclass} der jeweilige Modus mit einem \TeX-Befehl definiert werden.
+Beispielsweise kann der \opt{series}-Modus auf folgende Weise unter Umgehung des Auswahlmenüs erzwungen werden:
+\begin{lstlisting}
+    \def\mode{series}
+    \documentclass{osgexam}
+    % ...
+\end{lstlisting}
+
+\section{Klassenoptionen}
+\label{sec:options}
+Die Klasse übernimmt alle Options von \pkg{exam}, fügt aber eine Reihe neuer hinzu.
+
+\subsection*{Modi und Dateien}
+\Option{development}\WithValues{true,false,answers}\AndDefault{true}
+Der Buildmechanismus wird bei den Werten \opt{true} oder \opt{answers} deaktiviert; das Dokument kann also wie ein
+normales \LaTeX-Dokument ohne Nutzerinteraktion übersetzt werden. Der Wert \opt{answers} entspricht dem Setzen der
+\pkg{exam}-Option \opt{answers}, es wird also die Musterlösung generiert.
+
+Wird die Option nicht oder auf den Wert \opt{false} gesetzt, wird interaktiv die Art des zu erzeugenden Dokumentes
+abgefragt (siehe \ref{sec:doctypes}).
+\medskip
+
+\Option{prefix}\WithValues{\meta{Prefix}}
+Setzt den Prefix für die Ausgabedatei(en). Da der Dateiname einer Ausgabedatei durch den Dokument\emph{typ} (siehe \ref{sec:doctypes}) festgelegt
+wird, hilft das Setzen eines Prefix den Zusammenhang mit dem Quelldokument herzustellen.
+\medskip
+
+\Option{xlsfile}\WithValues{\meta{\file{Excel-Datei}}} Excel-Datei für die Seriengenerierung von einem Klassensatz von
+Aufgabenbättern, siehe \ref{sec:series}.
+\medskip
+
+\Option{outpath}\WithValues{\meta{Pfad}}\AndDefault{pdf}
+Dateipfad zu einem Verzeichnis für die generierten Dateien (außer im Developer-Mode). Damit kann das Verzeichnis mit den
+Aufgabenstellungen von den generierten Dateien freigehalten werden. Dies kann insbesondere bei der Seriengenerierung die
+Übersichtlichkeit steigern.
+
+Der Pfad wird relativ zum aktuellen Arbeitsverzeichnis interpretiert. Wenn ein absoluter Pfad angegeben werden soll,
+muss er wie üblich mit einem Schrägstrich (/) beginnen.
+\medskip
+
+\subsection*{Sprache}
+\Option{lang}\WithValues{de,en,\{de{,}en\},\{en{,}de\}}\AndDefault{de}
+Legt die Sprache(n) des Dokuments fest. Es sind nur Deutsch (\opt{de}) und Englisch (\opt{en}) vorgesehen. In
+Kombination mit den Sprachmacros (siehe \ref{sec:macro:lang}) können aus der sonst gleichen Quelldatei verschiedene
+Sprachvarianten generiert werden.\medskip
+
+\Option{quotes}\WithValues{babelshorthands,ascii,latex}\AndDefault{babelshorthands}
+Mit dieser Option wird gesteuert, wie Anführungszeichen eingegeben werden sollten.
+\begin{itemize}[nosep]
+  \item [\opt{babelshorthands}] Anführungszeichen werden als Shorthand entsprechend der (deutschen) Einstellung für
+    \pkg{babel} erwartet, also als \verb!"`! / \verb!"'!. Babel-Shorthands funktionieren unabhängig von der
+    Spracheinstellung, also auch in englischen Textabschnitten.
+  \item [\opt{ascii}] Anführungszeichen werden als einfache ASCII-Anführungszeichen erwartet (\verb!"!/\verb!"!). D
+  \item [\opt{latex}]  Der Standardmechanismus von \LaTeX (\verb!``!/\verb!''!) wird angenommen. Diese Einstellung
+    erfolgt auch, wenn ein sonstiger Wert gewählt oder die Option ganz weggelassen wird.
+\end{itemize}
+\Notice{Bei Wahl von \opt{babelshorthands} oder \opt{ascii} wird (ähnlich wie in \pkg{babel}) der Kategoriecode der
+  Anführungszeichen geändert, was ggf. mit anderen Paketen interferieren kann.}
+\medskip
+
+\subsection*{Gestaltung der Titelseite}
+\Option{solutiontime}\WithValues{\meta{Zeit in Minuten}}\AndDefault{90}
+Legt die zur Verfügung stehende Lösungszeit fest. Der hier angegebene Wert wird im Standardtitelblatt verwendet.
+Statt als Option kann die Lösungszeit auch über das Macro \Macro{solutionTime} in der Preamble gesetzt werden.
+\medskip
+
+\Option{passedwith}\WithValues{\meta{Punktegrenze für deas Bestehen in \%}}\AndDefault{50}
+Es wird festgelegt, ab wieviel Prozent der Punkt die Klausur bestanden ist. Der berechnete Wert wird auf der Titelseite
+angegeben.
+\medskip
+
+\Option{seat}Auf der Titelseite der Klausur wird der Sitz mit angegeben. Wir eine Klausur parallel in mehreren Räumen
+geschrieben, empfiehlt es sich, hier (auch) den Raum anzugeben.
+\medskip
+
+\Option{impolite}Die Willkommens-Formel und der Erfolgswunsch wird unterdrückt. Damit kann ggf. etwas Platz auf der
+Titelseite der Klausur gespart werden, falls zusätzliche oder geänderte Klausurregeln (siehe \ref{sec:macro:title})
+zusätzlichen Platz beanspruchen. 
+\medskip
+
+\section{Die verschiedenen Dokumenttypen}
+Wenn ein Dokument mit der \thepkg-Klasse übersetzt wird, ohne dass die \opt{development}-Option gesetzt ist, erscheint
+im Terminal ein Textmenü:
+\begin{verbatim}
+******************************************************
+ No mode provided.
+ Please enter a proper mode (default is 'e') 
+ - [e]mpty exam
+ - [a]nswers (solution)
+ - [p]ersonalized exam series from MS Excel file
+ - [i]ndividually personalized exam
+ - [d]ummy personalized exam
+
+ - [q]uit 
+
+\mode =
+\end{verbatim}
+
+Durch Auswahl des entsprechenden Eintrags wird die Übersetzung erneut~-- diesmal im ausgewählten Modus~-- gestartet.
+
+\subsection{Aufgabenblatt: Modi \opt{empty}, \opt{single} und \opt{dummy}}
+Bei den Modi  \opt{empty}, \opt{single} und \opt{dummy} wird jeweils eine einzelne Klausur generiert.
+Die Modi unterscheiden sich durch die Personalisierung der Klausur. Während in \opt{empty} keine Personaliserung
+vorgenommen wird, wird in \opt{dummy} die Klausur mit generischen Daten (Max Mustermann, \ldots) und im \opt{single}
+(Menüpunkt ``individually personalized exam") mit konkreten Personendaten personalisiert. Letztere werden interaktiv
+abgefragt.
+
+Der Name der Ausgabedatei ist \meta{prefix}-\meta{Studenten-ID}\file{.pdf} in Fall von \opt{single}, und
+\meta{prefix}-\file{dummy.pdf} bzw. \meta{prefix}-\file{empty.pdf} im Fall von \opt{single} bzw. \opt{empty}. Die
+Ausgabedatei wird ins Verzeichnis \meta{outpath} geschrieben.
+
+\subsection{Musterlösung: Modus \opt{answers}}
+In deisem Modus wird eine Musterlösung erstellt, ähnlich wie mit der \opt{answers} in der Klasse \pkg{exam}.
+Die Musterlösung enthät auf allen Seiten ein Wasserzeichen mit dem Wort ``Musterlösung'' bzw. ``Standard Solution'', je
+nachdem welches die (primäre) Sprache des Dokuments ist.
+
+\subsection{Seriendruck: Modus \opt{series}}
+\label{sec:series} 
+Um den Seriendruck von personaliserten Klausuren zu nutzen (Modus \opt{series}), muss eine Excel-Datei mit in der
+\opt{xlsfile}-Option angegebenen Namen und den entsprechenden Daten vorbereitet werden.
+\DescribeFile{xlsfile} Die Datei muss auf dem ersten Arbeitsblatt eine Tabelle mit den Identifikationsnummer der
+Studierenden, ihren Namen und Vornamen, sowie ggf.\ den zugewiesenen Platznummern enthalten. Die Spalten der Tabelle
+werden über einen Tabellenkopf identifiziert, wobei die Kopfeinträge unterschiedlich lauten können:
+\begin{itemize}[nosep]
+  \item Identifikationsnummer: ``\emph{Matrikelnummer}'', ``\emph{Matr-Nr}'', ``\emph{id}'', ``\emph{student id}''
+  \item Name: ``\emph{Name}'', ``\emph{surname}'', ``\emph{family name}''
+  \item Vorname: ``\emph{Vorname}'', ``\emph{first name}'', ``\emph{forename}'', ``\emph{given name}''
+  \item Platz: ``\emph{Platz}'', ``\emph{Sitz}'', ``\emph{seat}'', ``\emph{place}''
+\end{itemize}
+Es werden alle Einträge unter der Kopfzeile bis zur ersten Leerzeile verarbeitet, d.\;h. entsprechend viele Dateien in
+\meta{outpath} angelegt. Diese sind wieder nach dem Schema \meta{prefix}-\meta{Studenten-ID}\file{.pdf} benannt.
+Man beachte, dass das Erzeugen eines Klassensatzen von Klausuren durchaus einige Zeit in Anspruch nehmen kann.
+
+\section{Macros zur Klausurgestaltung}
+\subsection{Sprache}
+\label{sec:macro:lang}
+Die \thepkg-Klasse stellt den Erstellern von Klausuren eine Reihe von Macros zur Sprachunterstützung bereit.
+
+\DescribeMacro\deen{\meta{deutsche Textvariante}}{\meta{englische Textvariante}} Wenn nur eine Sprache bei der
+\opt{lang}-Option angegeben ist, wird diese ausgegeben. Sie zwei Sprachen ausgewählt, wird zunächst die Erstsprache
+ausgegeben und anschließend die Textvariante der Zweitsprache in der Folgezeile in einer alternativen Farbe.
+\medskip
+
+\DescribeMacro\sdeen{\meta{deutsche Textvariante}}{\meta{englische Textvariante}}Dieses Macro funktioniert wie
+\Macro{deen}, nur dass statt eines Zeilenumbruchs ein Schrägstrich (``/'') die Textvarianten trennt.
+\medskip
+
+\DescribeMacro\ldeen{\meta{deutsche Textvariante}}{\meta{englische Textvariante}}Dieses Macro gibt \emph{nur} die
+Variante in der Erstsprache (bzw. der einzigen gewählten Sprache) aus.
+\medskip
+
+\DescribeMacro\cdeen{\meta{deutsche Textvariante}}{\meta{englische Textvariante}}Dieses Macros funktioniert wie
+\Macro{ldeen}, richtet seine Ausgabe aber nicht nach der Erstsprache des Dokuments, sondern nach der derzeit umgebenden
+Sprache. Es kann also \emph{innerhalb} anderer Sprachmacros verwendet werden und gibt stets die Sprache seines Kontextes
+aus.
+\medskip
+
+\DescribeMacro\xdeen{\meta{deutsche Textvariante}}{\meta{englische Textvariante}} %{\meta{1. Ersetzungstext}}{\meta{2. Ersetzungstext}}
+  Das Macro \Macro{xdeen} funktioniert ähnlich wie \Macro{deen}, kann aber noch eine variable Anzahl weiterer Argumente
+  haben. In den jeweiligen Sprachvarianten wird nach dem Vorkommen von ``\verb!@!'' gefolgt von einer Zahl \meta{i}
+  gesucht, und jeweils durch das $i$. Argument ersetzt. Das Macro dient dazu, Aufgabenparameter in den verschiedenen
+  Sprachvarianten einheitlich zu halten.
+  Der Quellcode...
+  \begin{lstlisting}
+    \documentclass[lang={en,de}]{osgexam}
+    % ....
+    \xdeen{Gegeben seien die zwei Koordinaten (@1) und
+     (@2).}{Given two coordinates (@1) and (@2).}{1,0}{0,3}
+  \end{lstlisting}
+\noindent  ergibt beispielsweise
+
+\noindent\fbox{
+\begin{minipage}{\linewidth}
+  \noindent Given two coordinates (1,0) and (0,3).\\\textcolor{blue}{Gegeben seien die zwei Koordinaten (1,0) und (0,3).}
+\end{minipage}
+}
+\medskip
+
+Die Ergebnis der Verwendung von Parameternnummern, die nicht-existierenden Argumenten entsprechen, ist nicht definiert.
+\subsection{Titelseite}
+\label{sec:macro:title}
+Die \thepkg-Klasse legt automatisch eine Titelseite an, so dass sich ein Klausurautor nicht mehr um deren Layout kümmern
+braucht.
+Die Titelseite erlaubt es, die Klausur in einen A4-Umschlag mit Adressfenster zu stecken so dass die Personalisierung im
+Adressfenster zu sehen ist.
+
+Die Titelseite besteht aus folgenden Elementen:
+\begin{itemize}[nosep]
+  \item Punkte-/Bewertungstabelle, in die die möglichen Punkte für jede Aufgabe angegeben sind und in die die erreichten Punkte bei
+    der Bewertung handschriftlich eingetragen werden können.
+  \item Die Personalisierung mit Studenten-ID, Name, Semester und ggf. Sitzplatz
+  \item Das Fach, in dem die Klausur geschrieben wird
+  \item Eine Liste mit Regeln, die bei der Prüfung zu beachten sind
+\end{itemize}
+Durch die \thepkg-Klasse werden einige Macros zur Verfügung gestellt, um den Inhalt der Titelseite zu modifizieren.
+Sie müssen in der Preamble genutzt werden.
+
+\DescribeMacro\course[\meta{Abkürzung}]{\meta{Kursname}} Der Name der Lehrveranstaltung und ggf.\ eine Abkürzung wird
+gesetzt. Falls nötigt, kann der dieser Name mit \Macro{insertCourseName} und die Abkürzung mit \Macro{insertCourseAcronym} in
+der Klausur genutzt werden.
+
+\DescribeMacro\term[\meta{Semester-Kurzform}]{\meta{Semester}} Dies definiert das Semester, in dem die Klausur geschrieben wird,
+sowie ggf.\ eine Kurzform. Falls benötigt, kann auf das hier definierte Semester in der Klausur mit
+\Macro{insertCourseSemester} und auf seine Kurzform mit \Macro{insertCourseSemesterShort} zurückgegriffen werden.
+\medskip
+
+\DescribeMacro\solutionTime{\meta{Zeit}} Dies setzt die Lösungszeit, die jedoch auch über die Option \opt{solutiontime}
+eingestellt werden kann.
+
+\DescribeMacro{addextrapoints}[\meta{Bezeichnung}]{\meta{Punkte}} Nimmt in den Punktesspiegel Zusatzpunkte auf, die
+keiner einzelnen Aufgabe der Klausur zugeordnet werden können, beispielsweise Punkte einer Vorleistung oder Extrapunkte
+für Form etc.
+
+\DescribeMacro{addFrontPageRule}{\meta{Regeltext}}
+Dieses Macro fügt eine Prüfungsregel auf der Titelseite hinzu. Durch die \thepkg-Klasse sind bereits Standardregeln
+vorgegeben, die aber modifiziert werden können. Dazu sind die Regeln intern durchnummeriert, beginnend mit $1$. Mit
+Hilfe von \Macro{replaceFrontPageRule}{\meta{Nummer der Regel}}{\meta{Regeltext}} kann eine Regel modifiziert werden,
+und mit Hilfe von \Macro{removeFrontPageRule}{\meta{Nummer der Regel}} ganz gelöscht werden. Gelöschte Regeln werden
+nicht mehr angezeigt, behalten aber ihre Nummer, so dass sich weitere Modifikationen stets auf die ursprüngliche
+Nummerierung beziehen.
+
+\section{Einschränkungen, Probleme und Bugs}
+\subsection{Einschränkungen gegenüber der \pkg{exam}-Klasse}
+Während die Klasse \pkg{exam} die eierlegende Wollmilichsau ist und vieles zulässt, ist \thepkg\ auf einen bestimmten
+Einsatzfall festgelegt. Entsprechend können nicht alle Möglichkeiten von \pkg{exam} genutzt werden.
+Dieser Abschnitt zählt die wichtigsten Einschränkungen auf:
+\begin{itemize}
+  \item Das Layout der Titelseite einschließlich der verwendeten \mbox{Punkte-/}""Bewertungstabelle ist vorgegeben und kann (ohne größeren
+    Aufwand) nur im Rahmen der Klassenoptionen und der im Abschnitt~\ref{sec:macro:title} beschriebenen Macros geändert werden.
+  \item \thepkg\ gibt das Layout für Fragen vor, hat einen eigenen Punktemechanismus und ein angrpasstes Format für
+    die Punktedarstellung. Entsprechend können Punkte nur Zahlen sein. D.\;h. z.\;B., dass eine Prozentangabe für eine
+    Aufgabe (wie  auf  Seite 37 der \pkg{exam}-Dokumentation dargestellt) nicht möglich ist. Auch unterstützt \thepkg\
+    keine halben Punkte.\footnote{Die Notwendigkeit, halbe Punkte zu vergeben, deutet ohnehin in der Regel auf ein
+      schlechtes Klausurdesign hin.}
+\end{itemize}
+
+\subsection{Probleme}
+Seit Mik\TeX/Mac\TeX 2020 funktioniert \pkg{kvoption-patch} nicht mehr, das dazu diente, auch komplexere Klassenoptionen
+mit \pkg{keyval}/\pkg{kvoptions} zu parsen. Daher wurde \thepkg\ auf \pkg{pgfkeys}/\pkg{pgfopts} umgestellt. Die Version
+0.1 läuft jedoch nicht auf neueren \TeX-Installationen.
+
+Die \thepkg-Klasse ruft andere Programme auf, namentlich den Python-Interpreter und \file{latexmk}.
+Daher muss die Übersetzung stets mit der Aktivierung der Shell-Escape-Funktion vorgenommen werden, also z.B.:\medskip
 
 \noindent\verb!>lualatex -shell-escape myexam.tex!
 
@@ -73,7 +328,16 @@ Alternativ kann \texttt{latexmk} mit der im Paket zur Verfügung gestellten \tex
 \medskip
 
 \noindent\verb!>latexmkrc myexam.tex!
-\medskip
 
+\medskip
+\LongWarning{Werden andere \LaTeX-Übersetzungen in dem Verzeichnis durchgeführt, in dem sich die zur Verfügung gestellte
+  \file{latexmkrc}-Datei befindet, wird dafür ebenfalls die Shell-Escape-Funktion aktiviert. \textbf{Dies kann ein
+    Sicherheitsrisiko darstellen.}}
+
+
+\subsection{Bugs}
+Ich bin sicher, dass die Klasse eine ganz Reihe von Fehlern hat. Zum Zeitpunkt der Erstellung dieser Dokumentation ist
+mir jedoch keiner bekannt. Nutzer der Klasse werden gebeten, für gefundene Bugs ein Issue auf GitHub anzulegen:
+\url{https://github.com/tuc-osg/osg-exam/issues} 
 
 \end{document}
