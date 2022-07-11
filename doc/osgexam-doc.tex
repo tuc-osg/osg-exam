@@ -21,6 +21,7 @@ frame=leftline}
 \package{osgexam}
 \version{\fileversion}
 \makeatletter
+\let\mygobble=\@gobble
 \deftripstyle{skdoc}%
     {}{}{}%
     {\small Die~\textbf{\pkg*{\@package}}-Klasse,~v\@version}{}{\small\pagemark}
@@ -53,7 +54,10 @@ Die \pkg{osgexam}-Klasse hat zwei Funktionen
     kompletten Klassensatzes von Klausuren aus den Daten einer Excel-Datei.
 \end{enumerate}
 \subsection{Systemvoraussetzungen}
-Die \thepkg-Klasse verlangt Lua\LaTeX\ und läuft nicht mit pdfTeX. Für den Seriendruck ist \file{latexmk} sowie ein Python3 mit installierten
+Die \thepkg-Klasse verlangt Lua\LaTeX\ und läuft nicht mit pdfTeX. Sie baut auf der Klasse \pkg{exam}\ auf, daher muss
+in der \LaTeX-Installation diese und alle abhängigen Pakete vorhanden sein.
+ 
+Für den Seriendruck ist \file{latexmk} sowie ein Python3 mit installierten
 \file{openpyxl} sowie notwendig. Letzteres kann z.\;B.\ über
 
 \begin{verbatim}
@@ -299,20 +303,27 @@ nicht mehr angezeigt, behalten aber ihre Nummer, so dass sich weitere Modifikati
 Nummerierung beziehen.
 
 \section{Einschränkungen, Probleme und Bugs}
-\subsection{Einschränkungen gegenüber der \pkg{exam}-Klasse}
+\subsection{Einschränkungen und Änderungen gegenüber der \pkg{exam}-Klasse}
 Während die Klasse \pkg{exam} die eierlegende Wollmilichsau ist und vieles zulässt, ist \thepkg\ auf einen bestimmten
 Einsatzfall festgelegt. Entsprechend können nicht alle Möglichkeiten von \pkg{exam} genutzt werden.
 Dieser Abschnitt zählt die wichtigsten Einschränkungen auf:
 \begin{itemize}
-  \item Das Layout der Titelseite einschließlich der verwendeten \mbox{Punkte-/}""Bewertungstabelle ist vorgegeben und kann (ohne größeren
+   \item Das Layout der Titelseite einschließlich der verwendeten \mbox{Punkte-/}""Bewertungstabelle ist vorgegeben und kann (ohne größeren
     Aufwand) nur im Rahmen der Klassenoptionen und der im Abschnitt~\ref{sec:macro:title} beschriebenen Macros geändert werden.
-  \item \thepkg\ gibt das Layout für Fragen vor, hat einen eigenen Punktemechanismus und ein angrpasstes Format für
+ 
+    
+  \item Das Verhalten von \thepkg\ entspricht dem von \pkg{exam} bei gesetzter Option \opt{addpoints}. Für Fragen, die keine
+    Punkte enthalten~-- also in dem weder \Macro{question} noch \env{part}, \env{subpart} oder \env{subsubpart}
+    mit einem optionalen Argument genutzt werden, werden stets 0 Punkte angezeigt.
+    
+  \item \thepkg\ gibt das Layout für Fragen vor, hat einen eigenen Punktemechanismus und ein angepasstes Format für
     die Punktedarstellung. Entsprechend können Punkte nur Zahlen sein. D.\;h. z.\;B., dass eine Prozentangabe für eine
     Aufgabe (wie  auf  Seite 37 der \pkg{exam}-Dokumentation dargestellt) nicht möglich ist. Auch unterstützt \thepkg\
     keine halben Punkte.\footnote{Die Notwendigkeit, halbe Punkte zu vergeben, deutet ohnehin in der Regel auf ein
       schlechtes Klausurdesign hin.}
 \end{itemize}
 
+\DescribeEnv{foo} foo ist bar
 \subsection{Probleme}
 Seit Mik\TeX/Mac\TeX 2020 funktioniert \pkg{kvoption-patch} nicht mehr, das dazu diente, auch komplexere Klassenoptionen
 mit \pkg{keyval}/\pkg{kvoptions} zu parsen. Daher wurde \thepkg\ auf \pkg{pgfkeys}/\pkg{pgfopts} umgestellt. Die Version
