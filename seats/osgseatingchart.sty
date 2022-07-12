@@ -68,6 +68,7 @@
         newseat["exists"] = true        
         newseat["row"] = row
         newseat["seat"] = seat
+        newseat["reset"] = 0
         newseat["coordinate"]="("..tostring((seat-1)*(seatwidth+distseats)).."mm,".. tostring((row-1)*(seatheight+distrows)).."mm)"
         newseat["style"]="draw=black, inner sep=0pt, minimum width=".. tostring(seatwidth) .."mm, minimum height=".. tostring(seatheight) .."mm, rotate = 0"
         newseat["descr"]=tostring(row).."-"..tostring(seat)
@@ -87,9 +88,9 @@
     local seatnr = 1
     local currentangle
     local angle = sectorangle
-    local radius 
-    tex.print("\\PackageWarningNoLine{\MyPkgName}{delta: ".. tostring(delta).."}") 
-    tex.print("\\PackageWarningNoLine{\MyPkgName}{rmin: ".. tostring(rmin).."mm }") 
+    local radius
+    %tex.print("\\PackageWarningNoLine{\MyPkgName}{delta: ".. tostring(delta).."}") 
+    %tex.print("\\PackageWarningNoLine{\MyPkgName}{rmin: ".. tostring(rmin).."mm }") 
     for row =  1, rooms[name]["rows"] do
       rooms[name]["seatsinrow"][row] =  rooms[name]["maxseatperrow"]
       radius = rmin+(row-1)*(seatheight+distrows)
@@ -100,6 +101,7 @@
         newseat["exists"] = true        
         newseat["row"] = row
         newseat["seat"] = seat
+        newseat["reset"] = 0
         newseat["coordinate"]="("..tostring(currentangle)..":".. tostring(radius).."mm)"
         newseat["style"]="draw=black, inner sep=0pt, font=\\scriptsize, minimum width=".. tostring(seatwidth) .."mm, minimum height="..
           tostring(seatheight) .."mm, rotate = "..tostring(currentangle-90)
@@ -125,8 +127,6 @@
       tex.print("\\PackageWarningNoLine{\MyPkgName}{unknown geometry \string#1, use rect}")
       setuprect()
     end
-
-
   }
 }
 %
@@ -185,7 +185,7 @@
     local seatnr = 1
     local lastrow = 0
     for _ ,seat in ipairs(rooms[name]["seats"]) do
-       tex.sprint("\\PackageWarningNoLine{\MyPkgName}{seat: "..seat["descr"].."}")
+       %tex.sprint("\\PackageWarningNoLine{\MyPkgName}{seat: "..seat["descr"].."}")
        if (seat["row"] > lastrow)
        then
         lastrow = seat["row"]
@@ -199,15 +199,15 @@
 
 \newrobustcmd{\osgscLabelDebug}[1]{
   \typeout{***LableDEBUG***}
-  \luadirect{
-    local name = \string#1
-    local allseats = rooms[name]["seats"]
-    for nr,seat in ipairs(allseats) do
-      if (seat \string~= nil) then
-        seat["descr"] = tostring(nr)
-          end
-        end
-   }    
+   \luadirect{
+     local name = \string#1
+     local allseats = rooms[name]["seats"]
+     for nr,seat in ipairs(allseats) do
+       if (seat \string~= nil) then
+  %       seat["descr"] = tostring(nr)
+       end
+     end
+    }    
  }
 
 \newrobustcmd{\osgscLabelRowCol}[1]{
@@ -236,8 +236,16 @@
    } 
  }
 
-\newcounter{rownr}
-\newcounter{seatnr}
+ \newrobustcmd{\osgscSplit}[3]{ % room,index,value
+   \luadirect{
+     local name = \string#1
+     local ndx = \string#2
+     local reset = \string#3
+     rooms[name]["seats"][ndx]["reset"] = reset
+   }
+ }
+ \newcounter{rownr}
+ \newcounter{seatnr}
  
  \newcommand{\osgscprintseatlabel}[2]{%
    \setcounter{rownr}{#1}%
@@ -246,14 +254,15 @@
  } 
 
  \newrobustcmd{\osgscOccupy}[3]{ %{room}{row}{pattern}
-     \luadirect{
+     \luaexec{
        local name = \string#1
        local row = \string#2
-       local pattern = \string#3
+       local pattern = "\string#3"
        local off = 0
        local runoff
        local dist = 0
        local running = 1
+       local reset = 0
        local ndx,_ = string.find(pattern,'+')
        if (ndx == nil) then
          dist = tonumber(pattern)
@@ -262,24 +271,23 @@
          dist = tonumber(string.sub(pattern,1,ndx-1))
          off = tonumber(string.sub(pattern,ndx+1,-1))
        end
-       runoff = off  
        for i,seat in ipairs(rooms[name]["seats"]) do
          if seat["row"] == row then
-           if (runoff == 0) then
-             seat["descr"] = "\\osgscprintseatlabel{"..tostring(row).."}{".. tostring(running).."}"
-             %seat["descr"] = tostring(row).."-".. tostring(running)
-             running = running + 1
-             runoff = dist - 1
-           else
-             seat["descr"] = " "
-             runoff = runoff - 1
+           if  (seat["reset"] > 0) then reset = seat["reset"] end
+           if (((seat["seat"]-1+reset) \% dist) == off) then
+              seat["descr"] = "\\osgscprintseatlabel{"..tostring(row).."}{".. tostring(running).."}"
+              %seat["descr"] = tostring(row).."-".. tostring(running)
+              running = running + 1
+            else
+              seat["descr"] = " "
            end
          end
        end
    }
 }
  
- %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Rooms
  %%%%%%%%%%%%%%%%%%%%%%%%%
  \DeclareRoom{1.201}{17}{16}
  %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -294,6 +302,8 @@
  \osgscDeleteSeats{1.316}{222}{224}
  \osgscDeleteSeats{1.316}{303}{306}
  \osgscDeleteSeats{1.316}{335}{338}
+ \osgscSplit{1.316}{307}{1}
+ \osgscSplit{1.316}{339}{1}
  \osgscCompactify{1.316}
 %\DeclareRoom{1.201}{17}{16}
 %\osgsc@set@rect{1.201}
