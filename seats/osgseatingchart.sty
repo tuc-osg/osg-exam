@@ -53,7 +53,6 @@
 }
 
 \newrobustcmd*{\DeclareRoom}[4][rect]{
-  \typeout{***DECLARE***}
   \luadirect{
    local name = \string#2
 
@@ -89,8 +88,6 @@
     local currentangle
     local angle = sectorangle
     local radius
-    %tex.print("\\PackageWarningNoLine{\MyPkgName}{delta: ".. tostring(delta).."}") 
-    %tex.print("\\PackageWarningNoLine{\MyPkgName}{rmin: ".. tostring(rmin).."mm }") 
     for row =  1, rooms[name]["rows"] do
       rooms[name]["seatsinrow"][row] =  rooms[name]["maxseatperrow"]
       radius = rmin+(row-1)*(seatheight+distrows)
@@ -132,7 +129,6 @@
 %
 
 \newrobustcmd{\osgscDrawRoom}[1]{
-  \typeout{***DRAW***}
   \begin{tikzpicture}
       \luadirect{
         local name = \string#1
@@ -145,7 +141,6 @@
   }
   \end{tikzpicture}
 }
-
 
 \newrobustcmd{\osgscDeleteSeats}[3]{
   \luadirect{
@@ -160,7 +155,6 @@
 }
 
 \newrobustcmd{\osgscCompactify}[1]{
-  \typeout{***Compactify}
   \luadirect{
     local name = \string#1
     local j
@@ -185,7 +179,6 @@
     local seatnr = 1
     local lastrow = 0
     for _ ,seat in ipairs(rooms[name]["seats"]) do
-       %tex.sprint("\\PackageWarningNoLine{\MyPkgName}{seat: "..seat["descr"].."}")
        if (seat["row"] > lastrow)
        then
         lastrow = seat["row"]
@@ -204,14 +197,14 @@
      local allseats = rooms[name]["seats"]
      for nr,seat in ipairs(allseats) do
        if (seat \string~= nil) then
-  %       seat["descr"] = tostring(nr)
+         seat["descr"] = tostring(nr)
        end
      end
     }    
  }
 
 \newrobustcmd{\osgscLabelRowCol}[1]{
-  \typeout{***LableDEBUG***}
+  \typeout{***LableDEBUG-Row-Col***}
   \luadirect{
     local name = \string#1
     local allseats = rooms[name]["seats"]
@@ -236,14 +229,28 @@
    } 
  }
 
- \newrobustcmd{\osgscSplit}[3]{ % room,index,value
+ \newrobustcmd{\osgscSplit}[2]{ % room,index
    \luadirect{
      local name = \string#1
      local ndx = \string#2
-     local reset = \string#3
-     rooms[name]["seats"][ndx]["reset"] = reset
+     rooms[name]["seats"][ndx]["reset"] = -rooms[name]["seats"][ndx]["seat"]-1
    }
  }
+
+ \newrobustcmd{\osgscSkip}[4]{ % room,row,seat,dist
+   \luadirect{
+     local name = \string#1
+     local row = \string#2
+     local col = \string#3
+     local reset= \string#3
+     for _,seat in ipairs(rooms[name]["seats"]) do
+       if (seat["row"] == row ) and (seat["seat"] == col) then
+         seat["reset"] = reset
+       end
+     end
+   }
+ }
+
  \newcounter{rownr}
  \newcounter{seatnr}
  
@@ -273,10 +280,9 @@
        end
        for i,seat in ipairs(rooms[name]["seats"]) do
          if seat["row"] == row then
-           if  (seat["reset"] > 0) then reset = seat["reset"] end
+           if  (seat["reset"] \string~= 0) then reset = seat["reset"] end  
            if (((seat["seat"]-1+reset) \% dist) == off) then
               seat["descr"] = "\\osgscprintseatlabel{"..tostring(row).."}{".. tostring(running).."}"
-              %seat["descr"] = tostring(row).."-".. tostring(running)
               running = running + 1
             else
               seat["descr"] = " "
@@ -293,20 +299,17 @@
  %%%%%%%%%%%%%%%%%%%%%%%%%
  \DeclareRoom[csec]{1.316}{11}{32}
  \osgscDeleteSeats{1.316}{1}{5}
- \osgscDeleteSeats{1.316}{28}{37}
- \osgscDeleteSeats{1.316}{60}{69}
- \osgscDeleteSeats{1.316}{92}{99}
- \osgscDeleteSeats{1.316}{126}{131}
- \osgscDeleteSeats{1.316}{158}{163}
- \osgscDeleteSeats{1.316}{190}{195}
- \osgscDeleteSeats{1.316}{222}{224}
+ \osgscDeleteSeats{1.316}{28}{36}
+ \osgscDeleteSeats{1.316}{61}{67}
+ \osgscDeleteSeats{1.316}{94}{99}
+ \osgscDeleteSeats{1.316}{126}{130}
+ \osgscDeleteSeats{1.316}{159}{161}
+ \osgscDeleteSeats{1.316}{192}{192}
  \osgscDeleteSeats{1.316}{303}{306}
  \osgscDeleteSeats{1.316}{335}{338}
- \osgscSplit{1.316}{307}{1}
- \osgscSplit{1.316}{339}{1}
+ \osgscSplit{1.316}{307}
+ \osgscSplit{1.316}{339}
  \osgscCompactify{1.316}
-%\DeclareRoom{1.201}{17}{16}
-%\osgsc@set@rect{1.201}
 %
 % \ifstreq{\osgsc@room}{none}{
 %     \typeout{
