@@ -25,6 +25,7 @@
 % 2021-06-14: Version 0.2
 %  - Umstellung auf pgf-Keys (da keyval-patch in MikTeX 2020 nicht mehr läuft)
 %  - Option "answers" ist nun Wert von "development"
+% 2022-07-12: NEW: Gruppen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
@@ -42,6 +43,7 @@
 \RequirePackage{etoolbox}
 \newbool{osgexam@development}
 \newbool{osgexam@seat}
+\newbool{osgexam@group}
 \newbool{osgexam@impolite}
 %\def\@unknownkeys{}
 \pgfkeys{
@@ -76,7 +78,8 @@
   outpath=pdf,
                                 % Verzeichnis, in dem erzeugte Dateien ausgegeben werden (außer im Developer-Mode) 
   seat/.code= \booltrue{osgexam@seat},                 % Wird Sitzplatz auf Aufgabenbogen gedruckt?
-  lang/.store in=\osgexam@lang,                            % Sprache
+  group/.code=\booltrue{osgexam@group},             % Wird Gruppe auf Aufgabenbogen gedruckt?
+  lang/.store in=\osgexam@lang,                            % Sprache 
   lang=de,
   solutiontime/.store in=\osgexam@solutiontime,  % Prüfungsdauer in Minuten
   solutiontime=90,          
@@ -95,6 +98,8 @@
   defaultstudentid=123456,
   defaultseat/.store in=\osgexam@defaultseat,
   defaultseat=123.45.6/12-A,
+  defaultgroup/.store in=\osgexam@defaultgroup,
+  defaultgroup=A,
   % Alle anderen Optionen werden direkt an die Exam-Klasse durchgereicht.
   .unknown/.code={
     \typeout{*** Unknown option, pass to exam: \pgfkeyscurrentname}
@@ -188,12 +193,14 @@
   \gdef\oex@studentfirstname{\osgexam@defaultfirstname}
   \gdef\oex@studentlastname{\osgexam@defaultlastname}
   \gdef\oex@seat{\osgexam@defaultseat}
+  \gdef\oex@group{\osgexam@defaultgroup}
 }
 %%%%%%%%%%%%%% Mode: develop  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifdefstring{\osgexam@mode}{develop}{
   \gdef\studentname{\osgexam@defaultfirstname\ \osgexam@defaultlastname}
   \gdef\studentid{\osgexam@defaultstudentid}
   \gdef\seat{\osgexam@defaultseat}
+  \gdef\group{\osgexam@defaultgroup}
 }{}
 %%%%%%%%%%%%%% Mode: exam (empty) %%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifdefstring{\osgexam@mode}{exam}{
@@ -260,6 +267,16 @@
   }{
     \def\oex@seat{\osgexam@defaultseat} % dummy
   }
+  \ifbool{osgexam@group}{
+    \ifundef{\group}{
+      \booltrue{oex@startover}
+      \typein[\group]{Group}
+    }{
+    }
+    \def\oex@group{\group}
+  }{
+    \def\oex@group{\osgexam@defaultgroup} % dummy
+  }
 }{}
 %%%%%%%%%%%%%% Mode: dummy  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifdefstring{\osgexam@mode}{dummy}{
@@ -286,7 +303,7 @@ import os.path
 from subprocess import call
 from openpyxl import load_workbook
 
-def genexam(firstname, lastname, studentid, seat, mainfile, job, outpath, mode, prefix, force=False): 
+def genexam(firstname, lastname, studentid, seat, group, mainfile, job, outpath, mode, prefix, force=False): 
     '''
     Generates an exam for the given student, if not existing.
     Target file is stored in "outpath", with the student ID as file name.
@@ -295,6 +312,7 @@ def genexam(firstname, lastname, studentid, seat, mainfile, job, outpath, mode, 
     #print("lastname ="+lastname)
     #print("studentid ="+studentid)
     #print("seat ="+seat)
+    #print("group ="+group)
     #print("mainfile ="+mainfile)
     #print("job ="+job)
     #print("outpath ="+outpath)
@@ -314,8 +332,8 @@ def genexam(firstname, lastname, studentid, seat, mainfile, job, outpath, mode, 
         else:
             job = prefix+'-'+studentid
     call('latexmk -C', shell=True)
-    cmdline = 'latexmk -pdflua -enable-write18 -jobname={5} -outdir={6} -usepretex="\def\mode{{{7}}}\def\studentid{{{0}}}\def\studentname{{{1} {2}}}\def\seat{{{3}}}" {4}'.format(
-        studentid, firstname, lastname, seat, mainfile, job, outpath, mode
+    cmdline = 'latexmk -pdflua -enable-write18 -jobname={6} -outdir={7} -usepretex="\def\mode{{{8}}}\def\studentid{{{0}}}\def\studentname{{{1} {2}}}\def\seat{{{3}}}\def\studentgroup{{{4}}}" {5}'.format(
+        studentid, firstname, lastname, seat, group, mainfile, job, outpath, mode
         )
     #print(cmdline)  
     call(cmdline, shell=True)
@@ -332,6 +350,7 @@ def students(xlsx_file):
     first_name_col = None
     last_name_col = None
     seat_col = None
+    group_col = None
     for row_index, row in enumerate(ws.iter_rows()):
         if student_id_col != None and first_name_col != None and last_name_col != None:
             student_id = str(ws.cell(row=row_index+1, column=student_id_col+1).value)
@@ -341,6 +360,10 @@ def students(xlsx_file):
                 seat = ws.cell(row=row_index+1, column=seat_col+1).value
             else:
                 seat = '~'
+            if group_col:
+                group = ws.cell(row=row_index+1, column=group_col+1).value
+            else:
+                group = '~'
             if student_id != 'None':  # Might be None in empty rows
                 yield first_name, last_name, student_id, seat
         else:
@@ -353,18 +376,21 @@ def students(xlsx_file):
                     first_name_col = col_index
                 elif str(cell.value).strip().lower() in ['sitz', 'platz','seat','place']:
                      seat_col = col_index
+                elif str(cell.value).strip().lower() in ['gruppe', 'group']:
+                     group_col = col_index
     
 if sys.argv[1] == 'single':
     genexam(firstname=sys.argv[2],
                 lastname=sys.argv[3],
                 studentid=sys.argv[4],
                 seat=sys.argv[5],
-                mainfile=sys.argv[6],
-                job=sys.argv[7],
-                outpath=sys.argv[8] ,
-                mode=sys.argv[9],
-                prefix=sys.argv[10],
-                force=(sys.argv[11]=="True"))
+                group=sys.argv[6]]
+                mainfile=sys.argv[7],
+                job=sys.argv[8],
+                outpath=sys.argv[9] ,
+                mode=sys.argv[10],
+                prefix=sys.argv[11],
+                force=(sys.argv[12]=="True"))
 
     exit(0)
 
@@ -374,6 +400,7 @@ if sys.argv[1] == 'serie':
                      lastname=last_name, 
                      studentid=student_id,
                      seat=seat,
+                     group=group,
                      mainfile=sys.argv[3],
                      job=student_id,
                      outpath=sys.argv[4],
@@ -402,7 +429,7 @@ if sys.argv[1] == 'serie':
     \ClassError{\MyClassName}{Can't find file '\xlsfile'.}{Provide a existing Excel file.}
   }
 }{
-  \directlua{os.execute("python3 \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' '\osgexam@prefix' True")}
+  \directlua{os.execute("python3 \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\oex@group'  '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' '\osgexam@prefix' True")}
 }
 % hinterher aufräumen
 \directlua{os.execute("rm \jobname.gen.py")}
@@ -565,20 +592,21 @@ if sys.argv[1] == 'serie':
       \begin{tabular}[t]{l@{\hspace{2em}}l}
         \texttt{\Huge \studentid}&\ifosgexam@seat
                                    \ldeen{Platz}{Seat}: \seat
+                                   \fi\\[1em]
+        \\
+        {\tiny \studentname}&\ifosgexam@group
+                                   \ldeen{Gruppe}{Group}: \group
                                    \fi
+        \\
+         {\tiny \insertCourseAcronym\xspace (\insertCourseSemester)}
+    \\[1em]
+    \multicolumn{2}{l}{
+    \sffamily{\textcolor{red}{\textbf{\ldeen{Nicht öffnen, warten Sie auf
+            Anweisungen!}{Do not open, wait for instructions!}}}}}
       \end{tabular}
-      \vspace{1em}
-      {\tiny
-        \\
-        \studentname
-        \\
-        \insertCourseAcronym\xspace (\insertCourseSemester)
-      }
-      \vspace{1em}
-      \newline
-      \sffamily{\textcolor{red}{\textbf{\ldeen{Nicht öffnen, warten Sie auf
-            Anweisungen!}{Do not open, wait for instructions!}}}}
     };
+    
+  
   \end{tikzpicture}
   
   % Punktetabelle
