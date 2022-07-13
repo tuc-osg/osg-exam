@@ -1,5 +1,5 @@
 \newcommand*{\MyClassName}{osgexam}
-\ProvidesClass{\MyClassName}[2021/06/14 0.2a ]
+\ProvidesClass{\MyClassName}[2021/06/14 0.2b ]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Diese Klasse hat zwei Funktionen:
 %%  1. Erweiterung der exam-Klasse
