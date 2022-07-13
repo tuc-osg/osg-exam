@@ -43,6 +43,9 @@
 \RequirePackage{etoolbox}
 \newbool{osgexam@development}
 \newbool{osgexam@seat}
+\boolfalse{osgexam@seat}
+\newbool{osgexam@seatisfile}
+\boolfalse{osgexam@seatisfile}
 \newbool{osgexam@group}
 \newbool{osgexam@impolite}
 %\def\@unknownkeys{}
@@ -75,9 +78,11 @@
   xlsfile=,
                                 % Excel-Datei, die für die Serienerzeugung von Prüfungen genutzt wird
   outpath/.store in=\osgexam@outpath,
-  outpath=pdf,
-                                % Verzeichnis, in dem erzeugte Dateien ausgegeben werden (außer im Developer-Mode) 
-  seat/.code= \booltrue{osgexam@seat},                 % Wird Sitzplatz auf Aufgabenbogen gedruckt?
+  outpath=pdf,                                % Verzeichnis in dem erzeugte Dateien ausgegeben werden (außer im Developer-Mode) 
+  seat/.is choice,
+  seat/no/.code={\boolfalse{osgexam@seat}\boolfalse{osgexam@seatisfile}},
+  seat/both/.code={\booltrue{osgexam@seat}\booltrue{osgexam@seatisfile}},
+  seat/title/.code={\booltrue{osgexam@seat}\boolfalse{osgexam@seatisfile}},
   group/.code=\booltrue{osgexam@group},             % Wird Gruppe auf Aufgabenbogen gedruckt?
   lang/.store in=\osgexam@lang,                            % Sprache 
   lang=de,
@@ -200,7 +205,7 @@
   \gdef\studentname{\osgexam@defaultfirstname\ \osgexam@defaultlastname}
   \gdef\studentid{\osgexam@defaultstudentid}
   \gdef\seat{\osgexam@defaultseat}
-  \gdef\group{\osgexam@defaultgroup}
+  \gdef\studentgroup{\osgexam@defaultgroup}
 }{}
 %%%%%%%%%%%%%% Mode: exam (empty) %%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifdefstring{\osgexam@mode}{exam}{
@@ -268,12 +273,12 @@
     \def\oex@seat{\osgexam@defaultseat} % dummy
   }
   \ifbool{osgexam@group}{
-    \ifundef{\group}{
+    \ifundef{\studentgroup}{
       \booltrue{oex@startover}
-      \typein[\group]{Group}
+      \typein[\studentgroup]{Group}
     }{
     }
-    \def\oex@group{\group}
+    \def\oex@group{\studentgroup}
   }{
     \def\oex@group{\osgexam@defaultgroup} % dummy
   }
@@ -303,7 +308,7 @@ import os.path
 from subprocess import call
 from openpyxl import load_workbook
 
-def genexam(firstname, lastname, studentid, seat, group, mainfile, job, outpath, mode, prefix, force=False): 
+def genexam(firstname, lastname, studentid, seat, group, mainfile, job, outpath, mode, prefix, force=False, useseat=False): 
     '''
     Generates an exam for the given student, if not existing.
     Target file is stored in "outpath", with the student ID as file name.
@@ -328,9 +333,15 @@ def genexam(firstname, lastname, studentid, seat, group, mainfile, job, outpath,
     print("Generating " + targetfile)
     if mode == 'single':
         if not prefix:
-            job = studentid
+            if not useseat: 
+               job = studentid
+            else:
+               job = seat
         else:
-            job = prefix+'-'+studentid
+            if not useseat:
+               job = prefix+'-'+studentid
+            else:
+               job = prefix+'-'+seat
     call('latexmk -C', shell=True)
     cmdline = 'latexmk -pdflua -enable-write18 -jobname={6} -outdir={7} -usepretex="\def\mode{{{8}}}\def\studentid{{{0}}}\def\studentname{{{1} {2}}}\def\seat{{{3}}}\def\studentgroup{{{4}}}" {5}'.format(
         studentid, firstname, lastname, seat, group, mainfile, job, outpath, mode
@@ -365,7 +376,7 @@ def students(xlsx_file):
             else:
                 group = '~'
             if student_id != 'None':  # Might be None in empty rows
-                yield first_name, last_name, student_id, seat
+                yield first_name, last_name, student_id, seat, group
         else:
             for col_index, cell in enumerate(row):
                 if str(cell.value).strip().lower() in ['matrikelnummer','matr-nr.','id','student id']:
@@ -384,18 +395,22 @@ if sys.argv[1] == 'single':
                 lastname=sys.argv[3],
                 studentid=sys.argv[4],
                 seat=sys.argv[5],
-                group=sys.argv[6]]
+                group=sys.argv[6],
                 mainfile=sys.argv[7],
                 job=sys.argv[8],
                 outpath=sys.argv[9] ,
                 mode=sys.argv[10],
                 prefix=sys.argv[11],
-                force=(sys.argv[12]=="True"))
+                force=(sys.argv[12]=="True"),
+                useseat=(sys.argv[13]=="True")
+#                useseat=True
+)
 
     exit(0)
 
 if sys.argv[1] == 'serie':
-    for first_name, last_name, student_id, seat in students(sys.argv[2]):
+    for first_name, last_name, student_id, seat, group in students(sys.argv[2]):
+                print("@@@@@@@@@@@@ useseat = ", sys.argv[6])
                 genexam(firstname=first_name, 
                      lastname=last_name, 
                      studentid=student_id,
@@ -406,7 +421,9 @@ if sys.argv[1] == 'serie':
                      outpath=sys.argv[4],
                      mode='single',
                      prefix=sys.argv[5],
-                     force=False
+                     force=False,
+#                     useseat=True
+                     useseat=(sys.argv[6]=="True")
                 )
     exit(0)
 \end{filecontents*}
@@ -423,13 +440,21 @@ if sys.argv[1] == 'serie':
   }{}
   \IfFileExists{\xlsfile}{
     \typeout{***** Generate from "\xlsfile"}
-    \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath' '\osgexam@prefix'")}
+    \ifbool{osgexam@seatisfile}{
+      \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath' '\osgexam@prefix' True")}
+    }{
+      \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath' '\osgexam@prefix' False")}
+    }
   }{
     % Kann Datei nicht finden => Fehler
     \ClassError{\MyClassName}{Can't find file '\xlsfile'.}{Provide a existing Excel file.}
   }
 }{
-  \directlua{os.execute("python3 \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\oex@group'  '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' '\osgexam@prefix' True")}
+  \ifbool{osgexam@seatisfile}{
+    \directlua{os.execute("python3 \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\oex@group'  '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' '\osgexam@prefix' True True")}
+  }{
+    \directlua{os.execute("python3 \jobname.gen.py single '\oex@studentfirstname' '\oex@studentlastname' '\oex@studentid' '\oex@seat' '\oex@group'  '\jobname' '\oexjob' '\osgexam@outpath' '\oex@mode' '\osgexam@prefix' True False")}
+  }
 }
 % hinterher aufräumen
 \directlua{os.execute("rm \jobname.gen.py")}
@@ -595,7 +620,7 @@ if sys.argv[1] == 'serie':
                                    \fi\\[1em]
         \\
         {\tiny \studentname}&\ifosgexam@group
-                                   \ldeen{Gruppe}{Group}: \group
+                                   \ldeen{Gruppe}{Group}: \studentgroup
                                    \fi
         \\
          {\tiny \insertCourseAcronym\xspace (\insertCourseSemester)}
@@ -826,6 +851,8 @@ if sys.argv[1] == 'serie':
 }
 %% Lösungszeit in Minuten. Standardwert ist 90
 \DeclareRobustCommand*{\solutionTime}[1]{\pgfkeys{/osgexam/solutiontime=#1}}
+%% Gruppe per Hand
+\DeclareRobustCommand*{\setGroup}[1]{\def\studentgroup{#1}}
 
 %% Zusätzliche Punkte, die als Bonuspunkte in der Punkttabelle erscheinen.
 %   Optional kann ein Titel eingegeben werden.
@@ -845,6 +872,142 @@ if sys.argv[1] == 'serie':
 %  \RequirePackage[utf8]{luainputenc}
   \maketitle
 }
+%%%%%%%%%%%%%% Gruppen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Most parts are shameless stolen from codesection (to avoid confusing name)
+
+\renewcommand*{\do}[1]{
+  \ifcsstring{group}{#1}{
+    \DefineGroup[true]{#1}
+    \typeout{*** Define activated group #1}
+  }{
+    \DefineGroup[false]{#1}
+    \typeout{*** Define deactivated group #1}
+  }
+}
+\newcommand{\DeclareGroups}[1]{
+  \docsvlist{#1}
+}
+
+\newcommand{\DefineGroup}[2][true]{%
+  \expandafter\newif\csname ifGroup#2\endcsname
+  \csname Group#2#1\endcsname
+}%
+%%----------------------------------------------------------------------
+\newcommand\BeginGroup[1]{%
+  \ifcsdef{ifGroup#1}{}{%
+    \PackageError{codesection}{Section #1 is unknown\MessageBreak}{}%
+  }
+  \csname ifGroup#1\endcsname
+    \expandafter\@secondoftwo
+  \else
+    \expandafter\@firstoftwo
+  \fi
+  {% comment all code inside template section
+    \@bsphack
+%% open new group
+    \begingroup
+%% save current template section name
+    \def\@currtemplate{#1}%
+    \let\do\@makeother\dospecials
+    \catcode`\^^M\active
+%% enter main loop
+    \codeSection@
+  }%
+  {% execute all code inside template section
+%% = do nothing except trimming spaces
+    \@bsphack\@esphack%
+  }%
+}
+%%----------------------------------------------------------------------
+%%  The macros \@bsphack and  \@esphack are internal to LaTeX;
+%%  they ensure that an entity like a marginal note or
+%%  label definition does not introduce any extra space
+%%  into a paragraph, independently of whether or not
+%%  it is attached to a word.
+\newcommand\EndGroup[1]{\@bsphack\@esphack}
+%%----------------------------------------------------------------------
+%% usage ???
+\@ifundefined{vrb@catcodes}{%
+  \def\vrb@catcodes{%
+     \catcode`\!12\catcode`\[12\catcode`\]12%
+  }%
+}{}%
+%%----------------------------------------------------------------------
+\begingroup
+\vrb@catcodes
+\lccode`\!=`\\
+\lccode`\[=`\{
+\lccode`\]=`\}
+\catcode`\~=\active
+\lccode`\~=`\^^M
+\lccode`\C=`\C
+\lowercase{%
+%%----------------------------------------------------------------------
+  \def\codeSection@#1{%
+    \endgroup
+%% ----
+    \def\codeSection@##1~{\codeSection@@##1!#1\@nil}%
+%% ----
+    \def\codeSection@@##1!#1{\futurelet\next\codeSection@@@}%
+%% ----
+    \def\codeSection@@@##1\@nil{%
+       \ifx\next\@nil
+         \let\next\codeSection@
+       \else
+         \def\@tempa####1!#1\@nil{####1}%
+         \def\next{\expandafter\codeSection@test\@tempa##1\@nil~}%
+       \fi
+       \next
+    }%
+%% ----
+    \def\codeSection@test##1{%
+      \let\next\codeSection@test
+      \if\noexpand##1\noexpand~\let\next\codeSection@
+      \else \if\noexpand##1
+      \else \if\noexpand##1\noexpand[\let\@tempc\@empty
+                                     \let\next\codeSection@testend
+      \else \def\next{\codeSection@##1}%
+      \fi\fi\fi
+      \next
+    }%
+%% ----
+    \def\codeSection@testend##1{%
+      \if\noexpand##1\noexpand~\let\next\codeSection@
+      \else \if\noexpand##1\noexpand]\let\next\codeSection@@testend
+      \else\if\noexpand##1\noexpand!\def\next{\codeSection@!}%
+      \else \expandafter\def\expandafter\@tempc\expandafter
+            {\@tempc##1}%
+      \fi\fi\fi
+      \next
+    }%
+%% ---- test if end statement belongs to current section
+%%      saved in \@currtemplate
+    \def\codeSection@@testend{%
+      \ifx\@tempc\@currtemplate
+%% end group and call rescan
+         \edef\next{\noexpand\endgroup\noexpand\@esphack
+                    \noexpand\codeSection@rescan{\@currtemplate}}%
+       \else
+%% start loop gain
+         \let\next\codeSection@
+       \fi
+       \next
+    }%
+%% ---- does what ???
+    \def\codeSection@rescan##1##2~{%
+      \if\noexpand~\noexpand##2~%
+      \else
+        \@warning{%
+          Characters dropped after
+          `\string\EndGroup{##1}'%
+        }%
+      \fi
+    }%
+  }%
+%%----------------------------------------------------------------------
+} % lowercase
+\codeSection@{EndGroup}%
+
 %%%%%%%%%%%%%% Watermark %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifprintanswers
 \RequirePackage[
@@ -854,7 +1017,7 @@ if sys.argv[1] == 'serie':
   ]{background}
   \backgroundsetup{contents=\sffamily\bfseries\ldeen{Musterlösung}{Standard Solution}}
 \fi
-  
+
 %%%%%%%%%%%%%% Convenience %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\oex@xchecknextarg}{%
   \@ifnextchar\bgroup{\osx@consumnextarg}{\oex@process@xdeen}
