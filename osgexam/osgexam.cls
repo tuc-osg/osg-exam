@@ -26,6 +26,7 @@
 %  - Umstellung auf pgf-Keys (da keyval-patch in MikTeX 2020 nicht mehr läuft)
 %  - Option "answers" ist nun Wert von "development"
 % 2022-07-12: NEW: Gruppen
+% 2021-01-03: FIX: empty-Document erzeugte Fehler
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
@@ -215,8 +216,8 @@
     \def\oexjob{\osgexam@prefix-empty}
   }
   \ifstreq{\jobname}{\oexjob}{
-    \gdef\studentid{ID:}
-    \gdef\studentname{Name:\\~}
+    \gdef\studentid{ID:\hspace*{6ex}}
+    \gdef\studentname{Name:\rule[-4ex]{0pt}{2ex}}
     \gdef\seat{~}
   }{
     \booltrue{oex@startover}
@@ -617,7 +618,7 @@ if sys.argv[1] == 'serie':
       \begin{tabular}[t]{l@{\hspace{2em}}l}
         \texttt{\Huge \studentid}&\ifosgexam@seat
                                    \ldeen{Platz}{Seat}: \seat
-                                   \fi\\[1em]
+                                   \fi\\
         \\
         {\tiny \studentname}&\ifosgexam@group
                                    \ldeen{Gruppe}{Group}: \studentgroup
