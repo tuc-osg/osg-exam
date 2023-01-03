@@ -58,7 +58,7 @@ Die \thepkg-Klasse verlangt Lua\LaTeX\ und läuft nicht mit pdfTeX. Sie baut auf
 in der \LaTeX-Installation diese und alle abhängigen Pakete vorhanden sein.
  
 Für den Seriendruck ist \file{latexmk} sowie ein Python3 mit installierten
-\file{openpyxl} sowie notwendig. Letzteres kann z.\;B.\ über
+\file{openpyxl} notwendig. Letzteres kann z.\;B.\ über
 
 \begin{verbatim}
 >pip3 install openpyxl
@@ -77,7 +77,7 @@ Mit dieser Klasse können verschiedene Arten von Dokumenten erzeugt werden, die 
 \end{itemize}
 Es ist vorgesehen, den jeweiligen Modus interaktiv zu setzen.
 Während der Entwicklung einer Klausur ist die Interaktivität vermutlich störend, daher kann sie mit der
-\opt{developmet}-Option (siehe \ref{sec:options}) abgeschaltet werden. Jedoch stehen dann einige der Modi nicht mehr zur
+\opt{developmet}-Option (siehe Abschnitt~\ref{sec:options}) abgeschaltet werden. Jedoch stehen dann einige der Modi nicht mehr zur
 Verfügung.
 
 Um auch während der Entwicklung auf diese Modi zurückgreifen zu können, kann in Quelldokument noch vor
@@ -100,16 +100,16 @@ normales \LaTeX-Dokument ohne Nutzerinteraktion übersetzt werden. Der Wert \opt
 \pkg{exam}-Option \opt{answers}, es wird also die Musterlösung generiert.
 
 Wird die Option nicht oder auf den Wert \opt{false} gesetzt, wird interaktiv die Art des zu erzeugenden Dokumentes
-abgefragt (siehe \ref{sec:doctypes}).
+abgefragt (siehe Abschnitt~\ref{sec:doctypes}).
 \medskip
 
 \Option{prefix}\WithValues{\meta{Prefix}}
-Setzt den Prefix für die Ausgabedatei(en). Da der Dateiname einer Ausgabedatei durch den Dokument\emph{typ} (siehe \ref{sec:doctypes}) festgelegt
+Setzt den Prefix für die Ausgabedatei(en). Da der Dateiname einer Ausgabedatei durch den Dokument\emph{typ} (siehe Abschnitt~\ref{sec:doctypes}) festgelegt
 wird, hilft das Setzen eines Prefix den Zusammenhang mit dem Quelldokument herzustellen.
 \medskip
 
 \Option{xlsfile}\WithValues{\meta{\file{Excel-Datei}}} Excel-Datei für die Seriengenerierung von einem Klassensatz von
-Aufgabenbättern, siehe \ref{sec:series}.
+Aufgabenbättern, siehe Abschnitt~\ref{sec:series}.
 \medskip
 
 \Option{outpath}\WithValues{\meta{Pfad}}\AndDefault{pdf}
@@ -124,7 +124,7 @@ muss er wie üblich mit einem Schrägstrich (/) beginnen.
 \subsection*{Sprache}
 \Option{lang}\WithValues{de,en,\{de{,}en\},\{en{,}de\}}\AndDefault{de}
 Legt die Sprache(n) des Dokuments fest. Es sind nur Deutsch (\opt{de}) und Englisch (\opt{en}) vorgesehen. In
-Kombination mit den Sprachmacros (siehe \ref{sec:macro:lang}) können aus der sonst gleichen Quelldatei verschiedene
+Kombination mit den Sprachmacros (siehe Abschnitt~\ref{sec:macro:lang}) können aus der sonst gleichen Quelldatei verschiedene
 Sprachvarianten generiert werden.\medskip
 
 \Option{quotes}\WithValues{babelshorthands,ascii,latex}\AndDefault{babelshorthands}
@@ -147,17 +147,26 @@ Legt die zur Verfügung stehende Lösungszeit fest. Der hier angegebene Wert wir
 Statt als Option kann die Lösungszeit auch über das Macro \Macro{solutionTime} in der Preamble gesetzt werden.
 \medskip
 
-\Option{passedwith}\WithValues{\meta{Punktegrenze für deas Bestehen in \%}}\AndDefault{50}
+\Option{passedwith}\WithValues{\meta{Punktegrenze für das Bestehen in \%}}\AndDefault{50}
 Es wird festgelegt, ab wieviel Prozent der Punkt die Klausur bestanden ist. Der berechnete Wert wird auf der Titelseite
 angegeben.
 \medskip
 
-\Option{seat}Auf der Titelseite der Klausur wird der Sitz mit angegeben. Wir eine Klausur parallel in mehreren Räumen
+\Option{seat}\WithValues{no,title,xml} Steuert die Angabe eines Sitzplatzes.Wird eine Klausur parallel in mehreren Räumen
 geschrieben, empfiehlt es sich, hier (auch) den Raum anzugeben.
+\begin{itemize}[nosep]
+  \item [\opt{babelshorthands}] Anführungszeichen werden als Shorthand entsprechend der (deutschen) Einstellung für
+    \pkg{babel} erwartet, also als \verb!"`! / \verb!"'!. Babel-Shorthands funktionieren unabhängig von der
+    Spracheinstellung, also auch in englischen Textabschnitten.
+  \item [\opt{ascii}] Anführungszeichen werden als einfache ASCII-Anführungszeichen erwartet (\verb!"!/\verb!"!). D
+  \item [\opt{latex}]  Der Standardmechanismus von \LaTeX (\verb!``!/\verb!''!) wird angenommen. Diese Einstellung
+    erfolgt auch, wenn ein sonstiger Wert gewählt oder die Option ganz weggelassen wird.
+\end{itemize}
+
 \medskip
 
 \Option{impolite}Die Willkommens-Formel und der Erfolgswunsch wird unterdrückt. Damit kann ggf. etwas Platz auf der
-Titelseite der Klausur gespart werden, falls zusätzliche oder geänderte Klausurregeln (siehe \ref{sec:macro:title})
+Titelseite der Klausur gespart werden, falls zusätzliche oder geänderte Klausurregeln (siehe Abschnitt~\ref{sec:macro:title})
 zusätzlichen Platz beanspruchen. 
 \medskip
 

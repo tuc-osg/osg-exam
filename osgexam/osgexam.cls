@@ -71,7 +71,7 @@
     \typeout{*** Developer/answer mode}
   },
   % bei developer=answers wird "answers" an die Exam-Klasse durchgereicht, sonst hat die
-  % Option keine  % Wirkung.
+  % Option keine  Wirkung.
   prefix/.store in=\osgexam@prefix,
   prefix=,
                                 % Prefix für die erzeugten Dateinamen (z.B. prefix="np" => Musterlösung heisst "np-solution.pdf") 
@@ -82,7 +82,7 @@
   outpath=pdf,                                % Verzeichnis in dem erzeugte Dateien ausgegeben werden (außer im Developer-Mode) 
   seat/.is choice,
   seat/no/.code={\boolfalse{osgexam@seat}\boolfalse{osgexam@seatisfile}},
-  seat/both/.code={\booltrue{osgexam@seat}\booltrue{osgexam@seatisfile}},
+  seat/xml/.code={\booltrue{osgexam@seat}\booltrue{osgexam@seatisfile}},
   seat/title/.code={\booltrue{osgexam@seat}\boolfalse{osgexam@seatisfile}},
   group/.code=\booltrue{osgexam@group},             % Wird Gruppe auf Aufgabenbogen gedruckt?
   lang/.store in=\osgexam@lang,                            % Sprache 
