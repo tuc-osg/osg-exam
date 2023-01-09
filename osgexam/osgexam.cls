@@ -748,10 +748,10 @@ if sys.argv[1] == 'serie':
 }
 \addFrontPageRule{
   \deen{Erlaubte Hilfsmittel sind Schreibwerkzeuge, ein
-  \textbf{nichtprogrammierbarer} Taschenrechner und ein gedrucktes Wörterbuch
-  ohne handschriftliche Notizen.}{The only tools to be used are pens, a
-  \textbf{non-programmable} calculator, and a printed dictionary without
-  handwritten notes.}
+  \textbf{nichtprogrammierbarer} Taschenrechner, ein gedrucktes Wörterbuch
+  ohne handschriftliche Notizen sowie ein A4-Blatt (2 Seiten) mit handschriftlichen(!) Notizen.}{The only tools to be used are pens, a
+  \textbf{non-programmable} calculator, a printed dictionary without
+  annotations, and one piece of A4 paper (2 pages) with handwritten(!) notes.}
 }
 \addFrontPageRule{
   \deen{Elektronische Geräte mit nichtflüchtigem Speicher oder
