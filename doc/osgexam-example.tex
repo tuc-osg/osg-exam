@@ -19,30 +19,40 @@
   %\solutionTime{120}
   \addextrapoints[Extra]{3}
 
-  \DeclareGroups{A,B}
+  %\DeclareGroups{A,B}
 
   \begin{document}
   
   \begin{questions}
 
-\BeginGroup{A}
+      %
+      % Varianten für Gruppen: Der Text in im Environment "onlygroup" wird nur
+      % aufgenommen, wenn die übergebene \studentgroup im Argument der Umgebung
+      % (kommasepariert) auftaucht
+      \begin{onlygroup}{A}
           \question[23] A \deen{Was ist die Antwort auf die Frage nach dem Universum,
             dem Leben und den ganzen Rest?}{What ist the answer to the question for
             life, universe, and everything?}
           
           \fillin[42]
-          
-\EndGroup{A}
+      \end{onlygroup}
 
-\BeginGroup{B}
-          \question[23] B \deen{Was ist die Antwort auf die Frage nach dem Universum,
-            dem Leben und den ganzen Rest?}{What ist the answer to the question for
+      \begin{onlygroup}{B}
+
+          \question[23] B \deen{Wer gibt die Antwort auf die Frage nach dem Universum,
+            dem Leben und den ganzen Rest?}{Who answers the question for
             life, universe, and everything?}
           
-          \fillin[42]
-          
-\EndGroup{B}
+          \fillin[Deep Though]
+      \end{onlygroup}
 
+      \begin{onlygroup}{A,B}
+
+          \question[23] \deen{Wer hat sich diesen Unsinn ausgedacht?}{Who
+            maked up this nonsense?}
+          
+          \fillin[Douglas N. Adams]
+      \end{onlygroup}
 
   \question
   \deen{Alle Multiple-Choice-Fragen haben genau eine korrekte Antwort.

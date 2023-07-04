@@ -25,8 +25,9 @@
 % 2021-06-14: Version 0.2
 %  - Umstellung auf pgf-Keys (da keyval-patch in MikTeX 2020 nicht mehr läuft)
 %  - Option "answers" ist nun Wert von "development"
-% 2022-07-12: NEW: Gruppen
 % 2021-01-03: FIX: empty-Document erzeugte Fehler
+% 2022-07-12: NEW: Gruppen
+% 2023-07-04: FIX+NEW: Gruppen bug, keine Gruppendeklaration mehr notwendig
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
@@ -874,140 +875,15 @@ if sys.argv[1] == 'serie':
   \maketitle
 }
 %%%%%%%%%%%%%% Gruppen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Most parts are shameless stolen from codesection (to avoid confusing name)
-
-\renewcommand*{\do}[1]{
-  \ifcsstring{group}{#1}{
-    \DefineGroup[true]{#1}
-    \typeout{*** Define activated group #1}
-  }{
-    \DefineGroup[false]{#1}
-    \typeout{*** Define deactivated group #1}
-  }
+\NewDocumentCommand{\oex@addgroup}{m}{\listgadd{\oex@groupslist}{#1}}
+\NewDocumentCommand{\DeclareGroups}{> { \SplitList {,} } m}{
+    \ProcessList {#1}{\oex@addgroup}
 }
-\newcommand{\DeclareGroups}[1]{
-  \docsvlist{#1}
-}
-
-\newcommand{\DefineGroup}[2][true]{%
-  \expandafter\newif\csname ifGroup#2\endcsname
-  \csname Group#2#1\endcsname
-}%
-%%----------------------------------------------------------------------
-\newcommand\BeginGroup[1]{%
-  \ifcsdef{ifGroup#1}{}{%
-    \PackageError{codesection}{Section #1 is unknown\MessageBreak}{}%
-  }
-  \csname ifGroup#1\endcsname
-    \expandafter\@secondoftwo
-  \else
-    \expandafter\@firstoftwo
-  \fi
-  {% comment all code inside template section
-    \@bsphack
-%% open new group
-    \begingroup
-%% save current template section name
-    \def\@currtemplate{#1}%
-    \let\do\@makeother\dospecials
-    \catcode`\^^M\active
-%% enter main loop
-    \codeSection@
-  }%
-  {% execute all code inside template section
-%% = do nothing except trimming spaces
-    \@bsphack\@esphack%
-  }%
-}
-%%----------------------------------------------------------------------
-%%  The macros \@bsphack and  \@esphack are internal to LaTeX;
-%%  they ensure that an entity like a marginal note or
-%%  label definition does not introduce any extra space
-%%  into a paragraph, independently of whether or not
-%%  it is attached to a word.
-\newcommand\EndGroup[1]{\@bsphack\@esphack}
-%%----------------------------------------------------------------------
-%% usage ???
-\@ifundefined{vrb@catcodes}{%
-  \def\vrb@catcodes{%
-     \catcode`\!12\catcode`\[12\catcode`\]12%
-  }%
-}{}%
-%%----------------------------------------------------------------------
-\begingroup
-\vrb@catcodes
-\lccode`\!=`\\
-\lccode`\[=`\{
-\lccode`\]=`\}
-\catcode`\~=\active
-\lccode`\~=`\^^M
-\lccode`\C=`\C
-\lowercase{%
-%%----------------------------------------------------------------------
-  \def\codeSection@#1{%
-    \endgroup
-%% ----
-    \def\codeSection@##1~{\codeSection@@##1!#1\@nil}%
-%% ----
-    \def\codeSection@@##1!#1{\futurelet\next\codeSection@@@}%
-%% ----
-    \def\codeSection@@@##1\@nil{%
-       \ifx\next\@nil
-         \let\next\codeSection@
-       \else
-         \def\@tempa####1!#1\@nil{####1}%
-         \def\next{\expandafter\codeSection@test\@tempa##1\@nil~}%
-       \fi
-       \next
-    }%
-%% ----
-    \def\codeSection@test##1{%
-      \let\next\codeSection@test
-      \if\noexpand##1\noexpand~\let\next\codeSection@
-      \else \if\noexpand##1
-      \else \if\noexpand##1\noexpand[\let\@tempc\@empty
-                                     \let\next\codeSection@testend
-      \else \def\next{\codeSection@##1}%
-      \fi\fi\fi
-      \next
-    }%
-%% ----
-    \def\codeSection@testend##1{%
-      \if\noexpand##1\noexpand~\let\next\codeSection@
-      \else \if\noexpand##1\noexpand]\let\next\codeSection@@testend
-      \else\if\noexpand##1\noexpand!\def\next{\codeSection@!}%
-      \else \expandafter\def\expandafter\@tempc\expandafter
-            {\@tempc##1}%
-      \fi\fi\fi
-      \next
-    }%
-%% ---- test if end statement belongs to current section
-%%      saved in \@currtemplate
-    \def\codeSection@@testend{%
-      \ifx\@tempc\@currtemplate
-%% end group and call rescan
-         \edef\next{\noexpand\endgroup\noexpand\@esphack
-                    \noexpand\codeSection@rescan{\@currtemplate}}%
-       \else
-%% start loop gain
-         \let\next\codeSection@
-       \fi
-       \next
-    }%
-%% ---- does what ???
-    \def\codeSection@rescan##1##2~{%
-      \if\noexpand~\noexpand##2~%
-      \else
-        \@warning{%
-          Characters dropped after
-          `\string\EndGroup{##1}'%
-        }%
-      \fi
-    }%
-  }%
-%%----------------------------------------------------------------------
-} % lowercase
-\codeSection@{EndGroup}%
+\NewDocumentEnvironment{onlygroup}{> { \SplitList {,} } m  +b}{%
+    \gdef\oex@groupslist{}%
+    \ProcessList {#1}{\oex@addgroup}%
+    \xifinlist{\studentgroup}{\oex@groupslist}{#2}{}%
+}{}
 
 %%%%%%%%%%%%%% Watermark %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifprintanswers
