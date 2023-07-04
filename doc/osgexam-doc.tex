@@ -37,8 +37,9 @@ frame=leftline}
 \begin{abstract}
     Die \LaTeX-Klasse \pkg{exam} von \textsf{Philip Hirschhorn} eigenet sich exellent zur Erstellung von
     Klausurdokumenten mit \LaTeX. Die Klasse \thepkg\  baut auf der \pkg{exam}-Klasse auf, passt sie an die
-    Anforderungen für Klausuren an, die an der Professur für Betriebssysteme der TU~Chemnitz existieren und stellt
-    einige Erweiterungen sowie ein Buildsystem für verschiedene Versionen der Klausur zur Verfügung.
+    Anforderungen für Klausuren an, die an der Professur für Betriebssysteme der
+    TU~Chemnitz existieren, und stellt einige Erweiterungen sowie ein
+    Buildsystem für verschiedene Versionen der Klausur zur Verfügung. 
 \end{abstract}
 
 \tableofcontents\clearpage
@@ -46,7 +47,7 @@ frame=leftline}
 
 \section{Einführung}
 \subsection{Zweck}
-Die \pkg{osgexam}-Klasse hat zwei Funktionen
+Die \cls{osgexam}-Klasse hat zwei Funktionen
 \begin{enumerate}
   \item Sie erweitert bzw.\ konfiguriert die \pkg{exam}-Klasse von \textsf{Philip Hirschhorn} entsprechend den
     Anforderungen der Professur Betriebssysteme der TU~Chemnitz
@@ -55,7 +56,8 @@ Die \pkg{osgexam}-Klasse hat zwei Funktionen
 \end{enumerate}
 \subsection{Systemvoraussetzungen}
 Die \thepkg-Klasse verlangt Lua\LaTeX\ und läuft nicht mit pdfTeX. Sie baut auf der Klasse \pkg{exam}\ auf, daher muss
-in der \LaTeX-Installation diese und alle abhängigen Pakete vorhanden sein.
+in der \LaTeX-Installation diese Klasse sowie alle Pakete, von denen \pkg{exam}
+abhängt, vorhanden sein.
  
 Für den Seriendruck ist \file{latexmk} sowie ein Python3 mit installierten
 \file{openpyxl} notwendig. Letzteres kann z.\;B.\ über
@@ -133,7 +135,7 @@ Mit dieser Option wird gesteuert, wie Anführungszeichen eingegeben werden sollt
   \item [\opt{babelshorthands}] Anführungszeichen werden als Shorthand entsprechend der (deutschen) Einstellung für
     \pkg{babel} erwartet, also als \verb!"`! / \verb!"'!. Babel-Shorthands funktionieren unabhängig von der
     Spracheinstellung, also auch in englischen Textabschnitten.
-  \item [\opt{ascii}] Anführungszeichen werden als einfache ASCII-Anführungszeichen erwartet (\verb!"!/\verb!"!). D
+  \item [\opt{ascii}] Anführungszeichen werden als einfache ASCII-Anführungszeichen erwartet (\verb!"!/\verb!"!). 
   \item [\opt{latex}]  Der Standardmechanismus von \LaTeX (\verb!``!/\verb!''!) wird angenommen. Diese Einstellung
     erfolgt auch, wenn ein sonstiger Wert gewählt oder die Option ganz weggelassen wird.
 \end{itemize}
@@ -155,20 +157,27 @@ angegeben.
 \Option{seat}\WithValues{no,title,xml} Steuert die Angabe eines Sitzplatzes.Wird eine Klausur parallel in mehreren Räumen
 geschrieben, empfiehlt es sich, hier (auch) den Raum anzugeben.
 \begin{itemize}[nosep]
-  \item [\opt{babelshorthands}] Anführungszeichen werden als Shorthand entsprechend der (deutschen) Einstellung für
-    \pkg{babel} erwartet, also als \verb!"`! / \verb!"'!. Babel-Shorthands funktionieren unabhängig von der
-    Spracheinstellung, also auch in englischen Textabschnitten.
-  \item [\opt{ascii}] Anführungszeichen werden als einfache ASCII-Anführungszeichen erwartet (\verb!"!/\verb!"!). D
+  \item [\opt{no}] Auf der Titelseite wird kein Sitz angegeben.
+  \item [\opt{title}] Auf der Titelseite wird ein Feld für die Angabe eines
+    Sitzplatzes vorgesehen. Dieses ist zunächst leer, so dass der Sitzplatz
+    später handschriftlich hinzugefügt werden kann. Beim \opt{single}-Modus
+    wird ein Sitzplatz abgefragt, aber auch dieser kann leer gelassen werden.
   \item [\opt{latex}]  Der Standardmechanismus von \LaTeX (\verb!``!/\verb!''!) wird angenommen. Diese Einstellung
     erfolgt auch, wenn ein sonstiger Wert gewählt oder die Option ganz weggelassen wird.
 \end{itemize}
 
+\medskip
+\Option{group}Gibt die Gruppe auf der Titelseite an.
+\Notice{Die Nutzung des Mechanismus zum Ein-/Ausschließen von Gruppen
+  (siehe Abschnitt~\ref{sec:groups}) und
+  die Anzeige einer Gruppe auf der Titelseite sind unabgängig voneinander.}
 \medskip
 
 \Option{impolite}Die Willkommens-Formel und der Erfolgswunsch wird unterdrückt. Damit kann ggf. etwas Platz auf der
 Titelseite der Klausur gespart werden, falls zusätzliche oder geänderte Klausurregeln (siehe Abschnitt~\ref{sec:macro:title})
 zusätzlichen Platz beanspruchen. 
 \medskip
+
 
 \section{Die verschiedenen Dokumenttypen}
 Wenn ein Dokument mit der \thepkg-Klasse übersetzt wird, ohne dass die \opt{development}-Option gesetzt ist, erscheint
@@ -218,6 +227,7 @@ werden über einen Tabellenkopf identifiziert, wobei die Kopfeinträge unterschi
   \item Name: ``\emph{Name}'', ``\emph{surname}'', ``\emph{family name}''
   \item Vorname: ``\emph{Vorname}'', ``\emph{first name}'', ``\emph{forename}'', ``\emph{given name}''
   \item Platz: ``\emph{Platz}'', ``\emph{Sitz}'', ``\emph{seat}'', ``\emph{place}''
+  \item Gruppe: ``\emph{Gruppe}'', ``\emph{group}''
 \end{itemize}
 Es werden alle Einträge unter der Kopfzeile bis zur ersten Leerzeile verarbeitet, d.\;h. entsprechend viele Dateien in
 \meta{outpath} angelegt. Diese sind wieder nach dem Schema \meta{prefix}-\meta{Studenten-ID}\file{.pdf} benannt.
@@ -229,7 +239,7 @@ Man beachte, dass das Erzeugen eines Klassensatzen von Klausuren durchaus einige
 Die \thepkg-Klasse stellt den Erstellern von Klausuren eine Reihe von Macros zur Sprachunterstützung bereit.
 
 \DescribeMacro\deen{\meta{deutsche Textvariante}}{\meta{englische Textvariante}} Wenn nur eine Sprache bei der
-\opt{lang}-Option angegeben ist, wird diese ausgegeben. Sie zwei Sprachen ausgewählt, wird zunächst die Erstsprache
+\opt{lang}-Option angegeben ist, wird diese ausgegeben. Sind zwei Sprachen ausgewählt, wird zunächst die Erstsprache
 ausgegeben und anschließend die Textvariante der Zweitsprache in der Folgezeile in einer alternativen Farbe.
 \medskip
 
@@ -268,7 +278,7 @@ aus.
 }
 \medskip
 
-Die Ergebnis der Verwendung von Parameternnummern, die nicht-existierenden Argumenten entsprechen, ist nicht definiert.
+Das Ergebnis der Verwendung von Parameternnummern, die nicht-existierenden Argumenten entsprechen, ist nicht definiert.
 \subsection{Titelseite}
 \label{sec:macro:title}
 Die \thepkg-Klasse legt automatisch eine Titelseite an, so dass sich ein Klausurautor nicht mehr um deren Layout kümmern
@@ -285,7 +295,7 @@ Die Titelseite besteht aus folgenden Elementen:
   \item Eine Liste mit Regeln, die bei der Prüfung zu beachten sind
 \end{itemize}
 Durch die \thepkg-Klasse werden einige Macros zur Verfügung gestellt, um den Inhalt der Titelseite zu modifizieren.
-Sie müssen in der Preamble genutzt werden.
+Sie können nur in der Preamble genutzt werden.
 
 \DescribeMacro\course[\meta{Abkürzung}]{\meta{Kursname}} Der Name der Lehrveranstaltung und ggf.\ eine Abkürzung wird
 gesetzt. Falls nötigt, kann der dieser Name mit \Macro{insertCourseName} und die Abkürzung mit \Macro{insertCourseAcronym} in
@@ -306,10 +316,26 @@ für Form etc.
 \DescribeMacro{addFrontPageRule}{\meta{Regeltext}}
 Dieses Macro fügt eine Prüfungsregel auf der Titelseite hinzu. Durch die \thepkg-Klasse sind bereits Standardregeln
 vorgegeben, die aber modifiziert werden können. Dazu sind die Regeln intern durchnummeriert, beginnend mit $1$. Mit
-Hilfe von \Macro{replaceFrontPageRule}{\meta{Nummer der Regel}}{\meta{Regeltext}} kann eine Regel modifiziert werden,
+Hilfe von \Macro{replaceFrontPageRule}{\meta{Num"-mer der Regel}}{\meta{Regeltext}} kann eine Regel modifiziert werden,
 und mit Hilfe von \Macro{removeFrontPageRule}{\meta{Nummer der Regel}} ganz gelöscht werden. Gelöschte Regeln werden
 nicht mehr angezeigt, behalten aber ihre Nummer, so dass sich weitere Modifikationen stets auf die ursprüngliche
 Nummerierung beziehen.
+
+\subsection{Examsgruppen}
+\label{sec:groups}
+Die \thepkg-Klasse bietet die Möglichkeit, gezielt bestimmte Bereiche der
+Klausur auszuschließen und auf diese Weise verschiedene Gruppen zu ermöglichen.
+Die aktuelle Gruppe der Klausur kann im Seriendruck aus der Excel-Datei gelesen
+werden, durch das Macro \Macro{setgroup} gesetzt, oder im Singelmodus eingegeben
+werden.
+Die Abfrage im Singlemodus erfolgt jedoch nur, wenn die Klassenoption
+\opt{group} angegeben wurde.
+
+\DescribeEnv{onlygroup}{\meta{Liste von Gruppen}} Verarbeitet den Inhalt der
+Umgebung nur, wenn die aktuell gewählte Gruppe in der kommaseparierten \meta{Liste von
+  Gruppen} enthalten ist.
+\DescribeMacro\setgroup{\meta{Gruppe}} Setzt die aktuelle Gruppe. Dies sollte
+nur genutzt werden, wenn kein Seriendruck gewünscht ist.
 
 \section{Einschränkungen, Probleme und Bugs}
 \subsection{Einschränkungen und Änderungen gegenüber der \pkg{exam}-Klasse}
@@ -332,11 +358,11 @@ Dieser Abschnitt zählt die wichtigsten Einschränkungen auf:
       schlechtes Klausurdesign hin.}
 \end{itemize}
 
-\DescribeEnv{foo} foo ist bar
 \subsection{Probleme}
-Seit Mik\TeX/Mac\TeX 2020 funktioniert \pkg{kvoption-patch} nicht mehr, das dazu diente, auch komplexere Klassenoptionen
-mit \pkg{keyval}/\pkg{kvoptions} zu parsen. Daher wurde \thepkg\ auf \pkg{pgfkeys}/\pkg{pgfopts} umgestellt. Die Version
-0.1 läuft jedoch nicht auf neueren \TeX-Installationen.
+Seit Mik\TeX/Mac\TeX\ 2020 funktioniert \pkg{kvoption-patch} nicht mehr, das dazu diente, auch komplexere Klassenoptionen
+mit \pkg{keyval}/\pkg{kvoptions} zu parsen. Daher wurde \thepkg\ auf
+\pkg{pgfkeys}/\pkg{pgfopts} umgestellt. Die früheren Versionen von \thepkg\
+(<0.2) laufen damit nicht auf neueren \TeX-Installationen.
 
 Die \thepkg-Klasse ruft andere Programme auf, namentlich den Python-Interpreter und \file{latexmk}.
 Daher muss die Übersetzung stets mit der Aktivierung der Shell-Escape-Funktion vorgenommen werden, also z.B.:\medskip
@@ -357,7 +383,7 @@ Alternativ kann \texttt{latexmk} mit der im Paket zur Verfügung gestellten \tex
 
 \subsection{Bugs}
 Ich bin sicher, dass die Klasse eine ganz Reihe von Fehlern hat. Zum Zeitpunkt der Erstellung dieser Dokumentation ist
-mir jedoch keiner bekannt. Nutzer der Klasse werden gebeten, für gefundene Bugs ein Issue auf GitHub anzulegen:
+mir jedoch keiner bekannt. Nutzer der Klasse werden gebeten für gefundene Bugs ein Issue auf GitHub anzulegen:
 \url{https://github.com/tuc-osg/osg-exam/issues} 
 
 \end{document}
