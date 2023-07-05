@@ -82,7 +82,7 @@ Während der Entwicklung einer Klausur ist die Interaktivität vermutlich störe
 \opt{developmet}-Option (siehe Abschnitt~\ref{sec:options}) abgeschaltet werden. Jedoch stehen dann einige der Modi nicht mehr zur
 Verfügung.
 
-Um auch während der Entwicklung auf diese Modi zurückgreifen zu können, kann in Quelldokument noch vor
+Um auch während der Entwicklung auf diese Modi zurückgreifen zu können, kann im Quelldokument noch vor
 \cs{documentclass} der jeweilige Modus mit einem \TeX-Befehl definiert werden.
 Beispielsweise kann der \opt{series}-Modus auf folgende Weise unter Umgehung des Auswahlmenüs erzwungen werden:
 \begin{lstlisting}
@@ -93,7 +93,8 @@ Beispielsweise kann der \opt{series}-Modus auf folgende Weise unter Umgehung des
 
 \section{Klassenoptionen}
 \label{sec:options}
-Die Klasse übernimmt alle Options von \pkg{exam}, fügt aber eine Reihe neuer hinzu.
+Die Klasse übernimmt alle Options von \pkg{exam}, fügt aber eine Reihe neuer
+hinzu. Ausserdem werden einige Option von \pkg{exam} in den einzelnen Modi überschrieben.
 
 \subsection*{Modi und Dateien}
 \Option{development}\WithValues{true,false,answers}\AndDefault{true}
@@ -105,9 +106,9 @@ Wird die Option nicht oder auf den Wert \opt{false} gesetzt, wird interaktiv die
 abgefragt (siehe Abschnitt~\ref{sec:doctypes}).
 \medskip
 
-\Option{prefix}\WithValues{\meta{Prefix}}
-Setzt den Prefix für die Ausgabedatei(en). Da der Dateiname einer Ausgabedatei durch den Dokument\emph{typ} (siehe Abschnitt~\ref{sec:doctypes}) festgelegt
-wird, hilft das Setzen eines Prefix den Zusammenhang mit dem Quelldokument herzustellen.
+\Option{prefix}\WithValues{\meta{Präfix}}
+Setzt den Präfix für die Ausgabedatei(en). Da der Dateiname einer Ausgabedatei durch den Dokument\emph{typ} (siehe Abschnitt~\ref{sec:doctypes}) festgelegt
+wird, hilft das Setzen eines Präfix, den Zusammenhang mit dem Quelldokument herzustellen.
 \medskip
 
 \Option{xlsfile}\WithValues{\meta{\file{Excel-Datei}}} Excel-Datei für die Seriengenerierung von einem Klassensatz von
@@ -126,8 +127,10 @@ muss er wie üblich mit einem Schrägstrich (/) beginnen.
 \subsection*{Sprache}
 \Option{lang}\WithValues{de,en,\{de{,}en\},\{en{,}de\}}\AndDefault{de}
 Legt die Sprache(n) des Dokuments fest. Es sind nur Deutsch (\opt{de}) und Englisch (\opt{en}) vorgesehen. In
-Kombination mit den Sprachmacros (siehe Abschnitt~\ref{sec:macro:lang}) können aus der sonst gleichen Quelldatei verschiedene
-Sprachvarianten generiert werden.\medskip
+Kombination mit den Sprachmacros (siehe Abschnitt~\ref{sec:macro:lang}) können aus der gleichen Quelldatei verschiedene
+Sprachvarianten generiert werden. Werden beide Sprachen angegeben, müssen
+geschweifte Klammern gesetzt werden. Die erste Sprache in der Klammer ist dann
+die \emph{primäre} Sprache.\medskip
 
 \Option{quotes}\WithValues{babelshorthands,ascii,latex}\AndDefault{babelshorthands}
 Mit dieser Option wird gesteuert, wie Anführungszeichen eingegeben werden sollten.
@@ -283,7 +286,7 @@ Das Ergebnis der Verwendung von Parameternnummern, die nicht-existierenden Argum
 \label{sec:macro:title}
 Die \thepkg-Klasse legt automatisch eine Titelseite an, so dass sich ein Klausurautor nicht mehr um deren Layout kümmern
 braucht.
-Die Titelseite erlaubt es, die Klausur in einen A4-Umschlag mit Adressfenster zu stecken so dass die Personalisierung im
+Die Titelseite erlaubt es, die Klausur in einen A4-Umschlag mit Adressfenster zu stecken, so dass die Personalisierung im
 Adressfenster zu sehen ist.
 
 Die Titelseite besteht aus folgenden Elementen:
