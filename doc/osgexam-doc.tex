@@ -7,6 +7,7 @@ babel=ngerman
 %\changes{0.1}{Initiale Version}
 %\changes{0.2}{Umstellung auf pdfkeys, Anpassung an neue Version von openpyxl, }
 %\changes{0.2a}{Dokumentation}
+%\changes{0.2b}{Gruppen}
 
 \usepackage{enumitem}
 \usepackage{readprov}
@@ -71,7 +72,7 @@ in der Shell installiert werden.
 \label{sec:doctypes}
 Mit dieser Klasse können verschiedene Arten von Dokumenten erzeugt werden, die mit verschiedenen Modi verbunden sind:
 \begin{itemize}[nosep]
-  \item Nichtpersonalisiertes (also leere) Aufgabenblatt (Modus \opt{empty})
+  \item Nichtpersonalisiertes (also leeres) Aufgabenblatt (Modus \opt{empty})
   \item Personalisiertes Aufgabenblatt mit vorgegebenen Daten (Modus \opt{single})
   \item Personalisiertes Aufgabenblatt mit Dummy-Daten (Modus \opt{dummy})
   \item Serie von personaliserten Aufgabenblättern entsprechend den Daten in einer Exceldatei (Modus \opt{series})
@@ -160,23 +161,27 @@ angegeben.
 \Option{seat}\WithValues{no,title,xml} Steuert die Angabe eines Sitzplatzes.Wird eine Klausur parallel in mehreren Räumen
 geschrieben, empfiehlt es sich, hier (auch) den Raum anzugeben.
 \begin{itemize}[nosep]
-  \item [\opt{no}] Auf der Titelseite wird kein Sitz angegeben.
+  \item [\opt{no}] Auf der Titelseite wird kein Sitz angegeben. Dies ist auch
+    die Vorgabe, wenn die Option ausgelassen wird.
   \item [\opt{title}] Auf der Titelseite wird ein Feld für die Angabe eines
     Sitzplatzes vorgesehen. Dieses ist zunächst leer, so dass der Sitzplatz
     später handschriftlich hinzugefügt werden kann. Beim \opt{single}-Modus
     wird ein Sitzplatz abgefragt, aber auch dieser kann leer gelassen werden.
-  \item [\opt{latex}]  Der Standardmechanismus von \LaTeX (\verb!``!/\verb!''!) wird angenommen. Diese Einstellung
-    erfolgt auch, wenn ein sonstiger Wert gewählt oder die Option ganz weggelassen wird.
+    Im \opt{series}-Modus wird das Feld stets nachträglich ausgefüllt,
+    beispielsweise durch die Studierenden selbst.
+  \item [\opt{xls}] Wirkt außer im \opt{series}-Modus wie \opt{title}. Im
+    \opt{series}-Modus wird der Sitzplatz aus der XML-Datei ausgelesen,
+    vergleiche Abschnitt~\ref{sec:series}.
 \end{itemize}
 
 \medskip
-\Option{group}Gibt die Gruppe auf der Titelseite an.
+\Option{group}\noindent Gibt die Gruppe auf der Titelseite an.
 \Notice{Die Nutzung des Mechanismus zum Ein-/Ausschließen von Gruppen
   (siehe Abschnitt~\ref{sec:groups}) und
   die Anzeige einer Gruppe auf der Titelseite sind unabgängig voneinander.}
 \medskip
 
-\Option{impolite}Die Willkommens-Formel und der Erfolgswunsch wird unterdrückt. Damit kann ggf. etwas Platz auf der
+\Option{impolite}\noindent Die Willkommens-Formel und der Erfolgswunsch wird unterdrückt. Damit kann ggf. etwas Platz auf der
 Titelseite der Klausur gespart werden, falls zusätzliche oder geänderte Klausurregeln (siehe Abschnitt~\ref{sec:macro:title})
 zusätzlichen Platz beanspruchen. 
 \medskip
@@ -214,7 +219,7 @@ Der Name der Ausgabedatei ist \meta{prefix}-\meta{Studenten-ID}\file{.pdf} in Fa
 Ausgabedatei wird ins Verzeichnis \meta{outpath} geschrieben.
 
 \subsection{Musterlösung: Modus \opt{answers}}
-In deisem Modus wird eine Musterlösung erstellt, ähnlich wie mit der \opt{answers} in der Klasse \pkg{exam}.
+In diesem Modus wird eine Musterlösung erstellt, ähnlich wie mit der \opt{answers} in der Klasse \pkg{exam}.
 Die Musterlösung enthät auf allen Seiten ein Wasserzeichen mit dem Wort ``Musterlösung'' bzw. ``Standard Solution'', je
 nachdem welches die (primäre) Sprache des Dokuments ist.
 
