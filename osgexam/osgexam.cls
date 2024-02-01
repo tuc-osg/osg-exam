@@ -28,6 +28,7 @@
 % 2021-01-03: FIX: empty-Document erzeugte Fehler
 % 2022-07-12: NEW: Gruppen
 % 2023-07-04: FIX+NEW: Gruppen bug, keine Gruppendeklaration mehr notwendig
+% 2024-02-01: FIX: Für ID-Bezeichner in XL ist jetzt auch 'Matrikel' gültig
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
@@ -381,7 +382,7 @@ def students(xlsx_file):
                 yield first_name, last_name, student_id, seat, group
         else:
             for col_index, cell in enumerate(row):
-                if str(cell.value).strip().lower() in ['matrikelnummer','matr-nr.','id','student id']:
+                if str(cell.value).strip().lower() in ['matrikelnummer','matr-nr.','id','student id', 'matrikel']:
                     student_id_col = col_index
                 elif str(cell.value).strip().lower() in ['name', 'surname','family name']:
                     last_name_col = col_index
