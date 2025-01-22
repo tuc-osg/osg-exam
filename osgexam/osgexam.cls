@@ -475,7 +475,6 @@ if sys.argv[1] == 'serie':
 \AtEndPreamble{
   \usepackage{fontspec}
   \setmainfont{PT Serif} %{etwa: Times New Roman}
-  \providecommand{\familytype}{}
   % ToDo: Passende Sans- und Mono-Fonts setzen?
 }
 %%%%%%%%%%%%%% Sprache %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -483,6 +482,7 @@ if sys.argv[1] == 'serie':
 \RequirePackage[babelshorthands]{polyglossia}
 \setmainlanguage{english}
 \setotherlanguages{english,german}
+\providecommand{\familytype}{}
 \ifstreq{\osgexam@quotes}{babelshorthands}{
   %\typeout{****** Option "babelshorthands"}
   \setmainlanguage{english}
