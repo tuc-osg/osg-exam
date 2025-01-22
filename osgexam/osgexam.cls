@@ -482,7 +482,11 @@ if sys.argv[1] == 'serie':
 \RequirePackage[babelshorthands]{polyglossia}
 \setmainlanguage{english}
 \setotherlanguages{english,german}
+%% Work around für Polyglossia Problem
+%% TODO: Evtl. muss die richtige Familie für PT Serive (rm?) übergeben werden
+%% oder sogar alle \xxfamily-Macros gepatcht werden.
 \providecommand{\familytype}{}
+
 \ifstreq{\osgexam@quotes}{babelshorthands}{
   %\typeout{****** Option "babelshorthands"}
   \setmainlanguage{english}
