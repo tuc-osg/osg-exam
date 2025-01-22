@@ -57,7 +57,7 @@
   development/.is choice,
   development/true/.code={
     \booltrue{osgexam@development}
-    \typeout{*** Developer mode}
+    %\typeout{*** Developer mode}
   },
   development/false/.code={
     \boolfalse{osgexam@development}
@@ -70,7 +70,7 @@
     \booltrue{osgexam@development}
     \def\osgexam@mode{answer}
     \PassOptionsToClass{answers}{exam}
-    \typeout{*** Developer/answer mode}
+    %\typeout{*** Developer/answer mode}
   },
   % bei developer=answers wird "answers" an die Exam-Klasse durchgereicht, sonst hat die
   % Option keine  Wirkung.
@@ -110,7 +110,7 @@
   defaultgroup=A,
   % Alle anderen Optionen werden direkt an die Exam-Klasse durchgereicht.
   .unknown/.code={
-    \typeout{*** Unknown option, pass to exam: \pgfkeyscurrentname}
+    %\typeout{*** Unknown option, pass to exam: \pgfkeyscurrentname}
     \PassOptionsToClass{\pgfkeyscurrentname}{exam}
     },
 }                                
@@ -174,7 +174,7 @@
 }
 \ifdefstring{\osgexam@mode}{quit}{
   % Abbruch
-  \typeout{***** \osgexam@mode ... bye,bye!}
+  %\typeout{***** \osgexam@mode ... bye,bye!}
   \@@end
 }{}
 
@@ -293,7 +293,7 @@
   }{
     \def\oexjob{\osgexam@prefix-dummy}
   }
-  \typeout{***** Generate dummy *****}
+  %\typeout{***** Generate dummy *****}
   \def\oex@mode{dummy}
   \oex@setdummy
 }{}
@@ -442,7 +442,7 @@ if sys.argv[1] == 'serie':
     }{}
   }{}
   \IfFileExists{\xlsfile}{
-    \typeout{***** Generate from "\xlsfile"}
+    %\typeout{***** Generate from "\xlsfile"}
     \ifbool{osgexam@seatisfile}{
       \directlua{os.execute("python3 \jobname.gen.py serie '\osgexam@xlsfile' '\jobname' '\osgexam@outpath' '\osgexam@prefix' True")}
     }{
@@ -475,6 +475,7 @@ if sys.argv[1] == 'serie':
 \AtEndPreamble{
   \usepackage{fontspec}
   \setmainfont{PT Serif} %{etwa: Times New Roman}
+  \providecommand{\familytype}{}
   % ToDo: Passende Sans- und Mono-Fonts setzen?
 }
 %%%%%%%%%%%%%% Sprache %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -483,7 +484,7 @@ if sys.argv[1] == 'serie':
 \setmainlanguage{english}
 \setotherlanguages{english,german}
 \ifstreq{\osgexam@quotes}{babelshorthands}{
-  \typeout{****** Option "babelshorthands"}
+  %\typeout{****** Option "babelshorthands"}
   \setmainlanguage{english}
   \define@boolkey{english}[english@]{babelshorthands}[true]{}
   \def\english@shorthands{%
@@ -501,14 +502,14 @@ if sys.argv[1] == 'serie':
    \RequirePackage[autostyle=true,german=quotes,english=american]{csquotes} 
    \RequirePackage{polyglossia}
    \ifstreq{\osgexam@quotes}{ascii}{
-     \typeout{******* Quotes: ascii} 
+     %\typeout{******* Quotes: ascii} 
      \AfterEndPreamble{
        \MakeOuterQuote{"}
        \EnableQuotes
      }
    }{
      % Option latex oder beliebiger Wert: Standardverhalten von LaTeX 
-     \typeout{******* Quotes: latex (\osgexam@quotes)}
+     %\typeout{******* Quotes: latex (\osgexam@quotes)}
    }
 }
 % Damit die Shorthands funktionieren, muss Deutsch als Standardsprache festgelegt werden (WTF?) Das wird später ggf. überschrieben.
@@ -523,6 +524,7 @@ if sys.argv[1] == 'serie':
 \newbool{oex@active@en} % Englisch ist aktiv
 \newcommand{\lde}[1]{}
 \newcommand{\len}[1]{}
+% Einstellungen für Polyglossia
 \newcommand{\oex@pg@settings}{}
 % Die Sprachoption ("lang=..") kann geschweifte Klammern enthalten. Sie wird als Liste behandelt und mit dem
 % Listenmechanismus von eToolBox zerlegt.
@@ -570,8 +572,10 @@ if sys.argv[1] == 'serie':
 \expandafter\docsvlist\expandafter{\osgexam@lang}
 \providecommand{\oex@scndlang}{} % wenn keine Zweitsprache gesetzt ist, wird sie hier leer definiert
 % Aus irgendeinem Grund (TODO: warum?) vertragen sich Polyglossias Kommandos nicht mit
-% eToolBox'Schleifen-Mechanismus. Daher werden sie dort nicht direkt gerufen, sondern über ein Macro.
-\oex@pg@settings
+% eToolBox'Schleifen-Mechanismus. Daher werden sie dort nicht direkt gerufen,
+% sondern über ein Macro.
+%\typeout{********* \meaning\oex@pg@settings}
+%\oex@pg@settings
 
 % Zur Unterstützung von Mehrsprachigkeit gibt es mehrere Befehle, die auch direkt von Prüfungsautoren eingesetzt werden
 % können.
