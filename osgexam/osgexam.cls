@@ -1,5 +1,5 @@
 \newcommand*{\MyClassName}{osgexam}
-\ProvidesClass{\MyClassName}[2021/06/14 0.2b ]
+\ProvidesClass{\MyClassName}[2021/06/14 0.2c ]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Diese Klasse hat zwei Funktionen:
 %%  1. Erweiterung der exam-Klasse
@@ -29,6 +29,7 @@
 % 2022-07-12: NEW: Gruppen
 % 2023-07-04: FIX+NEW: Gruppen bug, keine Gruppendeklaration mehr notwendig
 % 2024-02-01: FIX: Für ID-Bezeichner in XL ist jetzt auch 'Matrikel' gültig
+% 2025-01-23: WORK AROUND: vermuteter Polyglossia-Bug
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
