@@ -349,7 +349,7 @@ def genexam(firstname, lastname, studentid, seat, group, mainfile, job, outpath,
             else:
                job = prefix+'-'+seat
     call('latexmk -C', shell=True)
-    cmdline = 'latexmk -pdflua -enable-write18 -jobname={6} -outdir={7} -usepretex="\def\mode{{{8}}}\def\studentid{{{0}}}\def\studentname{{{1} {2}}}\def\seat{{{3}}}\def\studentgroup{{{4}}}" {5}'.format(
+    cmdline = 'latexmk -pdflua -enable-write18 -jobname={6} -outdir={7} -usepretex="\\def\\mode{{{8}}}\\def\\studentid{{{0}}}\\def\\studentname{{{1} {2}}}\\def\\seat{{{3}}}\\def\\studentgroup{{{4}}}" {5}'.format(
         studentid, firstname, lastname, seat, group, mainfile, job, outpath, mode
         )
     #print(cmdline)  
