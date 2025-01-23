@@ -30,7 +30,8 @@
 % 2023-07-04: FIX+NEW: Gruppen bug, keine Gruppendeklaration mehr notwendig
 % 2024-02-01: FIX: Für ID-Bezeichner in XL ist jetzt auch 'Matrikel' gültig
 % 2025-01-23: WORK AROUND: vermuteter Polyglossia-Bug +
-%              FIX: Für ID-Bezeichner in XL ist jetzt auch 'Matrikel-Nr.' gültig
+%              FIX: Für ID-Bezeichner in XL ist jetzt auch 'matrikel-nr.' gültig
+%              FIX: Für Namens-Bezeichner in XL ist jetzt auch 'nachname' gültig
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
@@ -386,7 +387,7 @@ def students(xlsx_file):
             for col_index, cell in enumerate(row):
                 if str(cell.value).strip().lower() in ['matrikelnummer','matr-nr.','id','student id', 'matrikel', 'matrikel-nr.']:
                     student_id_col = col_index
-                elif str(cell.value).strip().lower() in ['name', 'surname','family name']:
+                elif str(cell.value).strip().lower() in ['name', 'nachname', 'surname','family name']:
                     last_name_col = col_index
                 elif str(cell.value).strip().lower() in ['vorname','first name','forename','given name']:
                     first_name_col = col_index
