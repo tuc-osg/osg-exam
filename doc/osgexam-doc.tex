@@ -231,8 +231,8 @@ Um den Seriendruck von personaliserten Klausuren zu nutzen (Modus \opt{series}),
 Studierenden, ihren Namen und Vornamen, sowie ggf.\ den zugewiesenen Platznummern enthalten. Die Spalten der Tabelle
 werden über einen Tabellenkopf identifiziert, wobei die Kopfeinträge unterschiedlich lauten können:
 \begin{itemize}[nosep]
-  \item Identifikationsnummer: ``\emph{Matrikelnummer}'', ``\emph{Matr-Nr}'', ``\emph{Matrikel}'', ``\emph{id}'', ``\emph{student id}''
-  \item Name: ``\emph{Name}'', ``\emph{surname}'', ``\emph{family name}''
+  \item Identifikationsnummer: ``\emph{Matrikelnummer}'', ``\emph{Matr-Nr}'', ``\emph{Matrikel-Nr.}'',``\emph{Matrikel}'', ``\emph{id}'', ``\emph{student id}''
+  \item Name: ``\emph{Name}'', ``\emph{Nachname}'',``\emph{surname}'', ``\emph{family name}''
   \item Vorname: ``\emph{Vorname}'', ``\emph{first name}'', ``\emph{forename}'', ``\emph{given name}''
   \item Platz: ``\emph{Platz}'', ``\emph{Sitz}'', ``\emph{seat}'', ``\emph{place}''
   \item Gruppe: ``\emph{Gruppe}'', ``\emph{group}''
@@ -367,28 +367,33 @@ Dieser Abschnitt zählt die wichtigsten Einschränkungen auf:
 \end{itemize}
 
 \subsection{Probleme}
-Seit Mik\TeX/Mac\TeX\ 2020 funktioniert \pkg{kvoption-patch} nicht mehr, das dazu diente, auch komplexere Klassenoptionen
-mit \pkg{keyval}/\pkg{kvoptions} zu parsen. Daher wurde \thepkg\ auf
-\pkg{pgfkeys}/\pkg{pgfopts} umgestellt. Die früheren Versionen von \thepkg\
-(<0.2) laufen damit nicht auf neueren \TeX-Installationen.
+\begin{itemize}
+  \item Seit Mik\TeX/Mac\TeX\ 2020 funktioniert \pkg{kvoption-patch} nicht mehr, das dazu diente, auch komplexere Klassenoptionen
+    mit \pkg{keyval}/\pkg{kvoptions} zu parsen. Daher wurde \thepkg\ auf
+    \pkg{pgfkeys}/\pkg{pgfopts} umgestellt. Die früheren Versionen von \thepkg\
+    (<0.2) laufen damit nicht auf neueren \TeX-Installationen.
+    
+  \item Die \thepkg-Klasse ruft andere Programme auf, namentlich den Python-Interpreter und \file{latexmk}.
+    Daher muss die Übersetzung stets mit der Aktivierung der Shell-Escape-Funktion vorgenommen werden, also z.B.:\medskip
+    
+    \noindent\verb!>lualatex -shell-escape myexam.tex!
+    
+    \medskip
+    Alternativ kann \texttt{latexmk} mit der im Paket zur Verfügung gestellten \texttt{latexmkrc}-Datei genutzt werden:
+    \medskip
 
-Die \thepkg-Klasse ruft andere Programme auf, namentlich den Python-Interpreter und \file{latexmk}.
-Daher muss die Übersetzung stets mit der Aktivierung der Shell-Escape-Funktion vorgenommen werden, also z.B.:\medskip
+    \noindent\verb!>latexmkrc myexam.tex!
 
-\noindent\verb!>lualatex -shell-escape myexam.tex!
+    \medskip
+    \LongWarning{Werden andere \LaTeX-Übersetzungen in dem Verzeichnis durchgeführt, in dem sich die zur Verfügung gestellte
+      \file{latexmkrc}-Datei befindet, wird dafür ebenfalls die Shell-Escape-Funktion aktiviert. \textbf{Dies kann ein
+        Sicherheitsrisiko darstellen.}}
 
-\medskip
-Alternativ kann \texttt{latexmk} mit der im Paket zur Verfügung gestellten \texttt{latexmkrc}-Datei genutzt werden:
-\medskip
-
-\noindent\verb!>latexmkrc myexam.tex!
-
-\medskip
-\LongWarning{Werden andere \LaTeX-Übersetzungen in dem Verzeichnis durchgeführt, in dem sich die zur Verfügung gestellte
-  \file{latexmkrc}-Datei befindet, wird dafür ebenfalls die Shell-Escape-Funktion aktiviert. \textbf{Dies kann ein
-    Sicherheitsrisiko darstellen.}}
-
-
+  \item Z.z. ist das Parsen des Excel-Files nicht sehr robust gegen fehlerhafte
+    Excel-Dateien und gibt keine aussagekräftigen Fehlermeldungen aus.
+    Daher sollte insbesondere stets überprüft werden, ob korrekte Spaltentitel
+    (siehe Abschnitt~\ref{sec:series}) verwendet wurden.
+\end{itemize}
 \subsection{Bugs}
 Ich bin sicher, dass die Klasse eine ganz Reihe von Fehlern hat. Zum Zeitpunkt der Erstellung dieser Dokumentation ist
 mir jedoch keiner bekannt. Nutzer der Klasse werden gebeten für gefundene Bugs ein Issue auf GitHub anzulegen:
