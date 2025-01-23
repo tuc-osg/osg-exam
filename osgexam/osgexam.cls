@@ -30,7 +30,7 @@
 % 2023-07-04: FIX+NEW: Gruppen bug, keine Gruppendeklaration mehr notwendig
 % 2024-02-01: FIX: Für ID-Bezeichner in XL ist jetzt auch 'Matrikel' gültig
 % 2025-01-23: WORK AROUND: vermuteter Polyglossia-Bug +
-              FIX: Für ID-Bezeichner in XL ist jetzt auch 'Matrikel-Nr.' gültig
+%              FIX: Für ID-Bezeichner in XL ist jetzt auch 'Matrikel-Nr.' gültig
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newlinechar=`\^^J
 \RequirePackage{iftex}               % für Test auf Lua(La)TeX
