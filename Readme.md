@@ -12,7 +12,25 @@ This is the template for our exams, which relies on the [LaTeX exam class](https
 
 This is still work in progress.
 
-## Installation
+## Dockerized installation
+### Prerequisites
+- docker: `brew install --cask docker`
+
+### Procedure
+- build a docker image based on the provided Dockerfile: `docker build -t osg-exam .`
+  - `osg-exam` is the name of the image, that's your choice.
+- test with provided example exam:
+```bash
+cd doc
+docker run --rm -it -v .:/workdir osg-exam sh -c "latexmk osgexam-example.tex"
+```
+- from this point on, exams in any folder can be build via this command, just adapt `osgexam-example.tex` to the corresponding source file
+
+### TODOs
+- provide an easier way to invoke compliation
+- make use of `inotify-tools` to provide a `latexmk -pvc`-like experience
+
+## Local installation
 ### Prerequisites
 - Python >= 3.6
 - latexmk >= 4.61
