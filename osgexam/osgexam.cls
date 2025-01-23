@@ -477,7 +477,7 @@ if sys.argv[1] == 'serie':
 \LoadClass{exam}
 \AtEndPreamble{
   \usepackage{fontspec}
-  \setmainfont{PT Serif} %{etwa: Times New Roman}
+  \setmainfont{PT-Serif} %{etwa: Times New Roman}
   % ToDo: Passende Sans- und Mono-Fonts setzen?
 }
 %%%%%%%%%%%%%% Sprache %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
