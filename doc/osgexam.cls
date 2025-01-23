@@ -1,1 +1,0 @@
-../osgexam/osgexam.cls
