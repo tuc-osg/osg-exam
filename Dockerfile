@@ -14,15 +14,13 @@ RUN fc-cache -fv;
 # install inotify-tools for monitoring / mimicing latexmk -pvc
 RUN apt-get install -y inotify-tools;
 
-# clone the repository
-RUN git clone https://github.com/tuc-osg/osg-exam.git ~/osg-exam;
+# copy repo contents into container
+COPY . /root/osg-exam
 
 # install class (as described in Readme.md, for now.)
 RUN mkdir -p $(kpsewhich -var-value=TEXMFHOME)/tex;
-RUN ln -s ~/osg-exam/osgexam $(kpsewhich -var-value=TEXMFHOME)/tex/osgexam;
+RUN ln -s /root/osg-exam/osgexam $(kpsewhich -var-value=TEXMFHOME)/tex/osgexam;
 RUN texhash;
 
 # install latexmkrc for building later on
-RUN ln -s ~/osg-exam/osgexam/latexmkrc /root/.latexmkrc;
-
-WORKDIR /workdir
+RUN ln -s /root/osg-exam/osgexam/latexmkrc /root/.latexmkrc;
