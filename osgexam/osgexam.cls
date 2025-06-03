@@ -54,6 +54,7 @@
 \boolfalse{osgexam@seatisfile}
 \newbool{osgexam@group}
 \newbool{osgexam@impolite}
+\newbool{osgexam@autoseries}
 %\def\@unknownkeys{}
 \pgfkeys{
   /osgexam/.cd,
@@ -97,6 +98,7 @@
   passedwith/.store in=\osgexam@passedwith,      % Prozentsatz, bei der eine Prüfung bestanden ist
   passedwith=50,
   impolite/.code=\booltrue{osgexam@impolite},     % Lässt Begrüssung und Erfolgswunsch weg (kann Platz sparen)
+  autoseries/.code=\booltrue{osgexam@autoseries},           % Automatische Serien-Erstellung (Überspringen des Menüs.)
   quotes/.store in=\osgexam@quotes,                    % Steuert Interpretation von Anführungszeichen
   quotes=latex,
   % Die folgenden Optionen brauchen in der Regel nicht genutzt werden.
@@ -159,6 +161,13 @@
 \newbool{oex@series}
 \ifundef{\mode}{
   % Kein mode wurde definiert
+  % series als Option gesetzt?
+  \ifbool{osgexam@autoseries}{
+    %=> setze mode entsprechend auf series und starte neu.
+    \booltrue{oex@startover}
+    \edef\osgexam@mode{series}
+  }
+  {
   % => frage am Terminal und starte neu 
   \typeout{**************************************************************************}
   \typein[\mode]{
@@ -172,6 +181,7 @@
   }
   \booltrue{oex@startover}
   \edef\osgexam@mode{\oex@processmenue{\mode}}
+  }
 }{
   \edef\osgexam@mode{\mode}
 }
