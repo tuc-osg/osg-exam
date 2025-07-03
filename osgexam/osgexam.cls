@@ -751,55 +751,44 @@ if sys.argv[1] == 'serie':
 \addFrontPageRule{
   \deen{Sie haben zur Beantwortung aller Fragen \osgexam@solutiontime\ Minuten Zeit.
     \ifbool{oex@lang@twolanguages}{Sie können auf Deutsch oder Englisch antworten.}{}}
-  {You have \osgexam@solutiontime\ minutes for answering all
-    questions. \ifbool{oex@lang@twolanguages}{You can answer in English or
-      German.}{}}
+  {You have \osgexam@solutiontime\ minutes for answering all questions.
+    \ifbool{oex@lang@twolanguages}{You can answer in English or German.}{}}
 }
 \addFrontPageRule{
-  \deen{Durch Annahme des Aufgabenblattes erklären Sie, dass Sie
-    \textbf{gesundheitlich in der Lage} sind, eine Prüfung abzulegen.}{By accepting
-    this task sheet you declare that you are \textbf{in a proper health condition} for
-    an exam.} 
+  \deen{Durch Annahme dieses Aufgabenblattes erklären Sie, dass Sie \textbf{gesundheitlich in der Lage} sind, eine Prüfung abzulegen.}
+  {By accepting this task sheet you declare that you are \textbf{in a proper health condition} to take an exam.} 
 }
 \addFrontPageRule{
-  \deen{Bitte stellen Sie Ihre Lösung lesbar und sauber dar. Schreiben Sie
-    Ihre Lösungen auf dieses Aufgabenblatt! Außer für Multiple-Choice- und
-    Fill-In-Fragen \textbf{muss stets erkennbar sein, wie Sie zum Ergebnis
-    gelangen!}}{Please write clear and readable. Write the final results on
-    this exam sheet! Except for multiple choice questions and fill in
-    questions, \textbf{you must provide the solution way!}}
+  \deen{Bitte stellen Sie Ihre Lösung lesbar und sauber dar.
+    \textbf{Nicht lesbare Antworten führen zu Punktverlust.}
+    Schreiben Sie Ihre Lösungen auf die Aufgabenblätter.
+    \textbf{Sie müssen immer den Lösungsweg angeben}, außer für Multiple-Choice-Fragen und Lücken(texten).}
+  {Please present your solution clearly and readably.
+    \textbf{Answers that are not legible will result in a loss of points.}
+    Write your results on the task sheets. 
+    \textbf{You always must provide the solution way}, except for multiple choice questions and fill in questions.}
 }
 \addFrontPageRule{
-  \deen{Erlaubte Hilfsmittel sind Schreibwerkzeuge, ein
-  \textbf{nichtprogrammierbarer} Taschenrechner, ein gedrucktes Wörterbuch
-  ohne handschriftliche Notizen sowie ein A4-Blatt (2 Seiten) mit handschriftlichen(!) Notizen.}{The only tools to be used are pens, a
-  \textbf{non-programmable} calculator, a printed dictionary without
-  annotations, and one piece of A4 paper (2 pages) with handwritten(!) notes.}
+  \deen{Erlaubte Hilfsmittel sind Schreibwerkzeuge, ein \textbf{nichtprogrammierbarer} Taschenrechner, ein gedrucktes Wörterbuch \textbf{ohne eigene Anmerkungen} sowie ein A4-Blatt (2 Seiten) mit \textbf{handschriftlichen Notizen}.}
+  {Permitted aids are writing tools, a \textbf{non-programmable} calculator, a printed dictionary \textbf{without own annotations} and an A4 sheet (2 pages) with \textbf{handwritten notes}.}
 }
 \addFrontPageRule{
-  \deen{Elektronische Geräte mit nichtflüchtigem Speicher oder
-    Kommunikationsfähigkeiten - egal ob aktiviert oder nicht - sind
-    untersagt. Das Vorhandensein solcher Geräte in Ihrer Reichweite kann als
-    Betrugsversuch gewertet werden.}{Devices with non-volatile storage or
-    communication capabilities (whether enabled or not) are forbidden. The
-    presence of such devices in your proximity can be interpreted as a case of
-    fraud.} 
+  \deen{Geräte mit nichtflüchtigem Speicher oder Kommunikationsfähigkeiten (egal ob aktiviert oder nicht) sind nicht erlaubt. 
+    Das Vorhandensein solcher Geräte in Ihrer Reichweite \textbf{wird als Betrugsversuch gewertet.}}
+  {Devices with non-volatile memory or communication capabilities (whether activated or not) are not permitted.
+    The presence of such devices within your range \textbf{will be considered as an attempt to cheat.}}
 }
 \addFrontPageRule{
-  \deen {Gespräche mit anderen Studenten und der Austausch von schriftlichen
-    Notizen sind während der Bearbeitungszeit untersagt und können als
-    Betrugsversuch gewertet werden.}{ Talking to other students or exchange of
-    written notes during the exam can be interpreted as a case of fraud.} 
+  \deen{Gespräche mit anderen Studenten und der Austausch von schriftlichen Notizen sind während der Bearbeitungszeit untersagt und \textbf{werden als Betrugsversuch gewertet.}}
+  {Talking to other students or exchange of written notes during the exam \textbf{will be considered as an attempt to cheat.}} 
 }
 \addFrontPageRule{
-\deen{Wenn Sie eine Frage haben oder die Toilette aufsuchen müssen, melden Sie
-  sich bitte und warten auf eine Aufsichtsperson.}{If you have questions or if
-  you need to go to the toilet notify a supervisor.} 
+\deen{Wenn Sie eine Frage oder ein Anliegen haben, \textbf{melden Sie sich} bitte und warten auf eine Aufsichtsperson.}
+  {If you have a question or concern, please \textbf{raise your hand} and wait for a supervisor.} 
 }
 \addFrontPageRule{
-  \deen{Bei unerlaubten Handlungen werden die Prüfungunterlagen \textbf{aller
-    involvierten Studierenden} eingezogen und ihnen die Note 5 erteilt.}{In
-    case of a fraud, \textbf{all participating students} will fail the exam.} 
+  \deen{Im Fall eines Betrugsversuchs werden die Prüfungunterlagen \textbf{aller involvierten Studierenden} eingezogen und ihnen die Note 5 erteilt.}
+  {In the event of attempted cheating, the examination documents \textbf{of all students involved} will be taken and they will be given a grade 5.} 
 }
 %%%%%%%%%%%%%% Formatierung %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \qformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}}%
