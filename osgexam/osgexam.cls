@@ -688,12 +688,10 @@ if sys.argv[1] == 'serie':
   % Prüfungsregeln
   \begin{minipage}[t][\oex@rulespace][c]{1.01\textwidth}\vspace*{5cm}
     \ifbool{osgexam@impolite}{\textbf{\sdeen{Regeln}{Rules}:}}{\noindent\deen{Willkommen zur Klausur {\textbf \insertCourseName}! Beachten Sie bitte
-        die folgenden Regeln:}{Welcome to the exam on {\textbf \insertCourseName}! Please regard the following rules:}}
+        die folgenden Regeln:}{Welcome to the {\textbf \insertCourseName} exam! Please note the following rules:}}
     \oex@rules
-    \noindent\textbf{\deen{Zum Bestehen der Prüfung müssen Sie mindestens
-        \insertPointsToPass\ Punkte erreichen. \ifbool{osgexam@impolite}{}{Viel Erfolg!}}{For passing
-        the exam you need at least \insertPointsToPass\ points. \ifbool{osgexam@impolite}{}{We wish
-          you success!}}} 
+    \noindent\textbf{\deen{Zum Bestehen der Prüfung müssen Sie mindestens \insertPointsToPass\ Punkte erreichen. \ifbool{osgexam@impolite}{}{Viel Erfolg!}}
+    {For passing the exam you need at least \insertPointsToPass\ points. \ifbool{osgexam@impolite}{}{Good luck!}}} 
     \vfil
   \end{minipage}
   
@@ -756,17 +754,17 @@ if sys.argv[1] == 'serie':
 }
 \addFrontPageRule{
   \deen{Durch Annahme dieses Aufgabenblattes erklären Sie, dass Sie \textbf{gesundheitlich in der Lage} sind, eine Prüfung abzulegen.}
-  {By accepting this task sheet you declare that you are \textbf{in a proper health condition} to take an exam.} 
+  {By accepting this task sheet you declare that you are \textbf{in a proper health condition} to take the exam.} 
 }
 \addFrontPageRule{
-  \deen{Bitte stellen Sie Ihre Lösung lesbar und sauber dar.
+  \deen{Bitte stellen Sie Ihre Lösung sauber dar.
     \textbf{Nicht lesbare Antworten führen zu Punktverlust.}
     Schreiben Sie Ihre Lösungen auf die Aufgabenblätter.
-    \textbf{Sie müssen immer den Lösungsweg angeben}, außer für Multiple-Choice-Fragen und Lücken(texten).}
-  {Please present your solution clearly and readably.
+    \textbf{Sie müssen immer Ihren Lösungsweg angeben}, außer für Multiple-Choice-Fragen und bei Lückentexten.}
+  {Please present your solution clearly.
     \textbf{Answers that are not legible will result in a loss of points.}
     Write your results on the task sheets. 
-    \textbf{You always must provide the solution way}, except for multiple choice questions and fill in questions.}
+    \textbf{You must always provide the path to your soultion}, except for multiple choice questions and fill in questions.}
 }
 \addFrontPageRule{
   \deen{Erlaubte Hilfsmittel sind Schreibwerkzeuge, ein \textbf{nichtprogrammierbarer} Taschenrechner, ein gedrucktes Wörterbuch \textbf{ohne eigene Anmerkungen} sowie ein A4-Blatt (2 Seiten) mit \textbf{handschriftlichen Notizen}.}
@@ -776,19 +774,19 @@ if sys.argv[1] == 'serie':
   \deen{Geräte mit nichtflüchtigem Speicher oder Kommunikationsfähigkeiten (egal ob aktiviert oder nicht) sind nicht erlaubt. 
     Das Vorhandensein solcher Geräte in Ihrer Reichweite \textbf{wird als Betrugsversuch gewertet.}}
   {Devices with non-volatile memory or communication capabilities (whether activated or not) are not permitted.
-    The presence of such devices within your range \textbf{will be considered as an attempt to cheat.}}
+    The presence of such devices within your proximity \textbf{will be considered as an attempt to cheat.}}
 }
 \addFrontPageRule{
-  \deen{Gespräche mit anderen Studenten und der Austausch von schriftlichen Notizen sind während der Bearbeitungszeit untersagt und \textbf{werden als Betrugsversuch gewertet.}}
-  {Talking to other students or exchange of written notes during the exam \textbf{will be considered as an attempt to cheat.}} 
+  \deen{Jede Art der Kommunikation mit anderen Studierenden, insbesondere der Austausch von schriftlichen Notizen während der Prüfung \textbf{wird als Betrugsversuch gewertet.}}
+  {Any form of communication with other students, especially the exchange of written notes during the exam \textbf{will be considered as an attempt to cheat.}} 
 }
 \addFrontPageRule{
-\deen{Wenn Sie eine Frage oder ein Anliegen haben, \textbf{melden Sie sich} bitte und warten auf eine Aufsichtsperson.}
+\deen{Wenn Sie eine Frage oder ein Anliegen haben, \textbf{melden Sie sich} bitte und warten Sie auf eine Aufsichtsperson.}
   {If you have a question or concern, please \textbf{raise your hand} and wait for a supervisor.} 
 }
 \addFrontPageRule{
-  \deen{Im Fall eines Betrugsversuchs werden die Prüfungunterlagen \textbf{aller involvierten Studierenden} eingezogen und ihnen die Note 5 erteilt.}
-  {In the event of attempted cheating, the examination documents \textbf{of all students involved} will be taken and they will be given a grade 5.} 
+  \deen{Im Fall eines Betrugsversuchs wird die Prüfung \textbf{aller involvierten Studierenden} eingezogen und mit \textbf{nicht bestanden} bewertet.}
+  {In the case of a cheating attempt, the exams \textbf{of all involved students} will be confiscated and \textbf{graded as failed}.} 
 }
 %%%%%%%%%%%%%% Formatierung %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \qformat{\textbf{\ldeen{Aufgabe}{Question} \ifstreq{\thequestion}{\thequestiontitle}{\thequestion}{\thequestion: \thequestiontitle}}%
