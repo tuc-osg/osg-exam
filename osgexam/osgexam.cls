@@ -764,7 +764,7 @@ if sys.argv[1] == 'serie':
   {Please present your solution clearly.
     \textbf{Answers that are not legible will result in a loss of points.}
     Write your results on the task sheets. 
-    \textbf{You must always provide the path to your soultion}, except for multiple choice questions and fill in questions.}
+    \textbf{You must always provide the path to your solution}, except for multiple choice questions and fill in questions.}
 }
 \addFrontPageRule{
   \deen{Erlaubte Hilfsmittel sind Schreibwerkzeuge, ein \textbf{nichtprogrammierbarer} Taschenrechner, ein gedrucktes Wörterbuch \textbf{ohne eigene Anmerkungen} sowie ein A4-Blatt (2 Seiten) mit \textbf{handschriftlichen Notizen}.}
